@@ -24,8 +24,8 @@ namespace OWCE.PropertyChangeHandlers
                     watchService.UpdateVoltage(voltage);
 
                     // For Quart
-                    //double pct = 99.9 / (0.8 + Math.Pow(1.28, 54 - voltage)) - 9;
-                    //watchService.UpdateBatteryPercent((int)pct);
+                    double pct = 99.9 / (0.8 + Math.Pow(1.28, 54 - voltage)) - 9;
+                    watchService.UpdateBatteryPercent((int)pct);
                 }
                 if (e.PropertyName.Equals("RPM"))
                 {
@@ -33,11 +33,11 @@ namespace OWCE.PropertyChangeHandlers
                     int speedMph = (int)RpmToSpeedConverter.ConvertFromRpm(rpm);
                     watchService.UpdateSpeed(speedMph);
                 }
-                if (e.PropertyName.Equals("BatteryPercent"))
-                {
-                    int batteryPercent = (sender as OWBoard).BatteryPercent;
-                    watchService.UpdateBatteryPercent(batteryPercent);
-                }
+                //if (e.PropertyName.Equals("BatteryPercent"))
+                //{
+                //    int batteryPercent = (sender as OWBoard).BatteryPercent;
+                //    watchService.UpdateBatteryPercent(batteryPercent);
+                //}
                 if (e.PropertyName.Equals("TripOdometer"))
                 {
                     ushort tripOdometer = (sender as OWBoard).TripOdometer;
