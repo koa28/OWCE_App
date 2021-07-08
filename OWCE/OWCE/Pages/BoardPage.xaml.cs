@@ -241,5 +241,14 @@ namespace OWCE.Pages
         }
         */
 
+        void SetSimpleStop_On(System.Object sender, System.EventArgs e)
+        {
+            this.Board.EnableSimpleStop();
+        }
+
+        void SetSimpleStop_Off(System.Object sender, System.EventArgs e)
+        {
+            this.Board.DisableSimpleStop();
+        }
     }
 }

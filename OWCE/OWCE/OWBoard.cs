@@ -1607,5 +1607,20 @@ namespace OWCE
             byte[] rideModeBytes = BitConverter.GetBytes(rideMode);
             var result = await App.Current.OWBLE.WriteValue(OWBoard.RideModeUUID, rideModeBytes, true);
         }
+
+        public async void EnableSimpleStop()
+        {
+            ushort x = 0x0301;
+            byte[] ssBytes = BitConverter.GetBytes(x);
+            await App.Current.OWBLE.WriteValue(OWBoard.UNKNOWN2UUID, ssBytes, true);
+        }
+
+        public async void DisableSimpleStop()
+        {
+            ushort x = 0x0300;
+            byte[] ssBytes = BitConverter.GetBytes(x);
+            await App.Current.OWBLE.WriteValue(OWBoard.UNKNOWN2UUID, ssBytes, true);
+        }
+
     }
 }
