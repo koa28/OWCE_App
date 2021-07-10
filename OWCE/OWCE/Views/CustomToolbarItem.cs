@@ -51,6 +51,19 @@ namespace OWCE.Views
 		}
 
 
+        public static readonly BindableProperty TextProperty = BindableProperty.Create(
+            propertyName: nameof(Text),
+            returnType: typeof(string),
+            declaringType: typeof(CustomToolbarItem));
+
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+
+
 
         public static readonly BindableProperty CommandProperty = BindableProperty.Create(
             propertyName: nameof(Command),
@@ -103,11 +116,37 @@ namespace OWCE.Views
             {
                 UpdateIconImage();
             }
+            else if (TextProperty.PropertyName.Equals(propertyName))
+            {
+                UpdateText();
+            }
         }
 
         void UpdateIsEnabled()
         {
             Opacity = IsEnabled ? 0.5 : 1.0;
+        }
+
+        void UpdateText()
+        {
+            // If image exists lets nuke it.
+            if (_image == null)
+            {
+                _image = null;
+            }
+
+            if (_label == null)
+            {
+                _label = new Label()
+                {
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center,
+                    TextColor = Color.Black,
+                };
+
+                Content = _label;
+            }
+            _label.Text = Text;
         }
 
         void UpdateIconImage()
