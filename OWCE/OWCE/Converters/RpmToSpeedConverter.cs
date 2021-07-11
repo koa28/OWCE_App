@@ -26,7 +26,8 @@ namespace OWCE.Converters
 
         public static float ConvertFromRpm(int rpm)
         {
-            var metersPerSecond = 917.66f * rpm * MillimetersPerMinuteToMetersPerSecond;
+            //var metersPerSecond = 917.66f * rpm * MillimetersPerMinuteToMetersPerSecond;
+            var metersPerSecond = 870.00f * rpm * MillimetersPerMinuteToMetersPerSecond;
 
             if (App.Current.MetricDisplay)
             {

@@ -23,7 +23,8 @@ namespace OWCE.Converters
         public static string ConvertRotationsToDistance(ushort rotations)
         {
             // TODO: Not use static wheel circumfrence.
-            var kilometers = 917.66f * rotations * 0.001f * 0.001f;
+            //var kilometers = 917.66f * rotations * 0.001f * 0.001f;
+            var kilometers = 870.00f * rotations * 0.001f * 0.001f;
 
             if (App.Current.MetricDisplay)
             {
