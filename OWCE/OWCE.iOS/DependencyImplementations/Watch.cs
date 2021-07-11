@@ -77,7 +77,7 @@ namespace OWCE.iOS.DependencyImplementations
 
                 WCSessionManager.SharedManager.SendMessage(new Dictionary<string, object>() {
                         //{ "BatteryPercent", board.BatteryPercent },
-                        { "BatteryPercent", QuartVoltageConverter.ConvertFromVoltage(board.BatteryVoltage) },
+                        { "BatteryPercent", (int)QuartVoltageConverter.GetPercentFromVoltage(board.BatteryVoltage) },
                         { "Speed", speedMph},
                         { "Voltage", board.BatteryVoltage},
                         { "SpeedUnitsLabel", App.Current.MetricDisplay ? "km/h" : "mph"},
