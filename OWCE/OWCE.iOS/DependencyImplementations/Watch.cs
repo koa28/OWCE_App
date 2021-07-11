@@ -76,7 +76,8 @@ namespace OWCE.iOS.DependencyImplementations
                 string distanceString = RotationsToDistanceConverter.ConvertRotationsToDistance(tripOdometer);
 
                 WCSessionManager.SharedManager.SendMessage(new Dictionary<string, object>() {
-                        { "BatteryPercent", board.BatteryPercent },
+                        //{ "BatteryPercent", board.BatteryPercent },
+                        { "BatteryPercent", QuartVoltageConverter.ConvertFromVoltage(board.BatteryVoltage) },
                         { "Speed", speedMph},
                         { "Voltage", board.BatteryVoltage},
                         { "SpeedUnitsLabel", App.Current.MetricDisplay ? "km/h" : "mph"},

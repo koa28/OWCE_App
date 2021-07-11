@@ -24,7 +24,7 @@ namespace OWCE.PropertyChangeHandlers
                     watchService.UpdateVoltage(voltage);
 
                     // For Quart
-                    double pct = 99.9 / (0.8 + Math.Pow(1.28, 54 - voltage)) - 9;
+                    double pct = QuartVoltageConverter.GetPercentFromVoltage(voltage);
                     watchService.UpdateBatteryPercent((int)pct);
                 }
                 if (e.PropertyName.Equals("RPM"))

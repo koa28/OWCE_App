@@ -12,9 +12,7 @@ namespace OWCE.Converters
         {
             if (value is float batteryVoltage)
             {
-                double pct = 99.9 / (0.8 + Math.Pow(1.28, 54 - batteryVoltage)) - 9;
-                int pctInt = (int)pct;
-                return String.Format("{0}%", pctInt);
+                return ConvertFromVoltage(batteryVoltage);
             }
             return "0%";
         }
@@ -22,6 +20,18 @@ namespace OWCE.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+
+        public static string ConvertFromVoltage(float voltage)
+        {
+            double pct = GetPercentFromVoltage(voltage);
+            int pctInt = (int)pct;
+            return String.Format("{0}%", pctInt);
+        }
+
+        public static double GetPercentFromVoltage(float voltage)
+        {
+            return 99.9 / (0.8 + Math.Pow(1.28, 54 - voltage)) - 9;
         }
     }
 }
