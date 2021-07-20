@@ -2,6 +2,7 @@
 <pages:BaseContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:OWCE.Converters"
     xmlns:pages="clr-namespace:OWCE.Pages"
     xmlns:views="clr-namespace:OWCE.Views"
     xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
@@ -11,6 +12,9 @@
     Title="{Binding Name}">
 
     <pages:BaseContentPage.Resources>
+        <ResourceDictionary>
+           <converters:RpmToSpeedConverter x:Key="rpmToSpeedConverter" />
+        </ResourceDictionary>
         <rgpopup:PopupPage x:Key="SettingsPopupPage" x:Name="SettingsPopupPage">
             <rgpopup:PopupPage.Animation>
                 <rgpopup:ScaleAnimation 
@@ -96,6 +100,9 @@
                     <Label Grid.Row="3" Grid.Column="0" Text="Firmware" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" />
                     <Label Grid.Row="4" Grid.Column="0" Text="RSSI" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" />
                     <Label Grid.Row="5" Grid.Column="0" Text="App Version" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" />
+                    <Label Grid.Row="6" Grid.Column="0" Text="Trip Revs" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" />
+                    <Label Grid.Row="7" Grid.Column="0" Text="Max RPM" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" />
+                    <Label Grid.Row="8" Grid.Column="0" Text="Max Speed" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" />
 
                     <Label Grid.Row="0" Grid.Column="1" Text="{Binding SerialNumber}" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
                     <Label Grid.Row="1" Grid.Column="1" Text="{Binding BatterySerial}" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
@@ -103,6 +110,9 @@
                     <Label Grid.Row="3" Grid.Column="1" Text="{Binding FirmwareRevision}" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
                     <Label Grid.Row="4" Grid.Column="1" Text="{Binding RSSI}" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
                     <Label Grid.Row="5" Grid.Column="1" x:Name="AppVersionLabel" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
+                    <Label Grid.Row="6" Grid.Column="1" Text="{Binding TripOdometer}" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
+                    <Label Grid.Row="7" Grid.Column="1" Text="{Binding MaxRPM}" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
+                    <Label Grid.Row="8" Grid.Column="1" Text="{Binding MaxRPM, Converter={StaticResource rpmToSpeedConverter}, ConverterParameter={Binding WheelCircumference}, StringFormat='{0:F1}'}" FontFamily="SairaExtraCondensed-SemiBold" FontSize="16" TextColor="#7F7F7F" HorizontalOptions="End" />
                 </Grid>
             </StackLayout>
         </ScrollView>

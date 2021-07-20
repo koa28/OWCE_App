@@ -279,7 +279,19 @@ namespace OWCE
         public int RPM
         {
             get { return _rpm; }
-            set { if (_rpm != value) { _rpm = value; OnPropertyChanged(); } }
+            set { if (_rpm != value) { _rpm = value; UpdateMaxRpm(_rpm);  OnPropertyChanged(); } }
+        }
+
+        private void UpdateMaxRpm(int rpm)
+        {
+            if (rpm > MaxRPM) { MaxRPM = rpm; }
+        }
+
+        private int _maxrpm;
+        public int MaxRPM
+        {
+            get { return _maxrpm; }
+            set { if (_maxrpm != value) { _maxrpm = value; OnPropertyChanged(); } }
         }
 
         // Value is stored in meters per second.
