@@ -758,7 +758,7 @@ namespace OWCE
                 {
                     // NOOP: Board is active 😜
                 }
-                else if (FirmwareRevision >= 4142) // Pint or XR with 4210 hardware 
+                else if (FirmwareRevision >= 4142 && !hasConnectionCode()) // Pint or XR with 4210 hardware 
                 {
                     if (FirmwareRevision >= 4155 && HardwareRevision < 5000) // XR with 4155 FW.
                     {
@@ -857,7 +857,12 @@ namespace OWCE
             // TODO: Restore _characteristics[OWBoard.SerialReadUUID].ValueUpdated -= SerialRead_ValueUpdated;
             if (byteArray.Length == 20)
             {
-                if (FirmwareRevision >= 4141) // Pint or XR with 4210 hardware 
+                if (hasConnectionCode())
+                {
+                    byte[] key = convertFromHexString(App.Current.BoardConnectionCode);
+                    await _owble.WriteValue(OWBoard.SerialWriteUUID, key);
+                }
+                else if (FirmwareRevision >= 4141) // Pint or XR with 4210 hardware 
                 {
                     // Get bytes 3 through to 19 (start 3, length 16)
                     var apiKeyArray = new byte[16];
@@ -1635,5 +1640,25 @@ namespace OWCE
             await App.Current.OWBLE.WriteValue(OWBoard.UNKNOWN2UUID, ssBytes, true);
         }
 
+        public static byte[] convertFromHexString(string s)
+        {
+            if (s.Length % 2 != 0) throw new FormatException("String length must be even number");
+            byte[] b = new byte[s.Length / 2];
+            for (int i = 0; i < s.Length - 1; i += 2)
+            {
+                b[i / 2] = (byte)((GetValFromHex(s[i]) << 4) + GetValFromHex(s[i + 1]));
+            }
+            return b;
+        }
+
+        static byte GetValFromHex(char c)
+        {
+            if (c >= '0' && c <= '9') return (byte)(c - '0');
+            if (c >= 'A' && c <= 'F') return (byte)(c - 'A' + 10);
+            if (c >= 'a' && c <= 'f') return (byte)(c - 'a' + 10);
+            throw new FormatException("Unexpected char in hex string: " + c);
+        }
+
+        private bool hasConnectionCode() { return App.Current.BoardConnectionCode != null; }
     }
 }

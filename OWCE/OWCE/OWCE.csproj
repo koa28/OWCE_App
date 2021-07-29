@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <UserSecretsId>f573970f-865a-4f25-8f4c-cf5b14b57428</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -44,6 +45,7 @@
     <Folder Include="Network\" />
     <Folder Include="Exceptions\" />
     <Folder Include="PropertyChangeHandlers\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="App.xaml.cs">
@@ -74,6 +76,7 @@
     <None Remove="Resources\Fonts\SairaExtraCondensed-Medium.ttf" />
     <None Remove="Newtonsoft.Json" />
     <None Remove="PropertyChangeHandlers\" />
+    <None Remove="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Fonts\SairaExtraCondensed-SemiBold.ttf" />

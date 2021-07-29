@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
 using System.Linq;
+using OWCE.Utils;
 
 [assembly: ExportFont("SairaExtraCondensed-Black.ttf")]
 [assembly: ExportFont("SairaExtraCondensed-Bold.ttf")]
@@ -50,12 +51,21 @@ namespace OWCE
             set { SetValue(MetricDisplayProperty, value); }
         }
 
+        private string _boardConnectionCode = null;
+
+        public string BoardConnectionCode
+        {
+            get { return _boardConnectionCode; }
+        }
+
         public string LogsDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "beta_ride_logs");
 
         public App()
         {
 
             MetricDisplay = Preferences.Get("metric_display", System.Globalization.RegionInfo.CurrentRegion.IsMetric);
+            _boardConnectionCode = UserSecretsManager.Settings["BoardConnectionCode"];
+            Debug.WriteLine("BoardConnectionCode: " + BoardConnectionCode);
             
             if (Directory.Exists(LogsDirectory) == false)
             {
