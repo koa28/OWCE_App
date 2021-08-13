@@ -293,12 +293,20 @@ namespace OWCE.Pages
             var boardIndex = Boards.IndexOf(board);
             if (boardIndex == -1)
             {
-                Boards.Add(board);
+                if (board.ID.Equals(App.Current.BoardId))
+                {
+                    // This is a familiar board, add it to the front
+                    Boards.Insert(0, board);
+                }
+                else
+                {
+                    Boards.Add(board);
+                }
             }
             else
             {
                 // Its odd that we set the name again, but when a board is just powered on its name is "Onewheel", not "ow123456"
-                Boards[boardIndex].Name = board.Name;
+                Boards[boardIndex].Name = board.ID.Equals(App.Current.BoardId) ? "* " + board.Name : board.Name;
                 Boards[boardIndex].IsAvailable = true;
                 Boards[boardIndex].NativePeripheral = board.NativePeripheral;
             }

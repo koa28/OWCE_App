@@ -58,6 +58,10 @@ namespace OWCE
             get { return _boardConnectionCode; }
         }
 
+        private string _boardId = null;
+
+        public string BoardId { get { return _boardId; } }
+
         public string LogsDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "beta_ride_logs");
 
         public App()
@@ -65,6 +69,7 @@ namespace OWCE
 
             MetricDisplay = Preferences.Get("metric_display", System.Globalization.RegionInfo.CurrentRegion.IsMetric);
             _boardConnectionCode = UserSecretsManager.Settings["BoardConnectionCode"];
+            _boardId = UserSecretsManager.Settings["BoardId"];
             Debug.WriteLine("BoardConnectionCode: " + BoardConnectionCode);
             
             if (Directory.Exists(LogsDirectory) == false)
