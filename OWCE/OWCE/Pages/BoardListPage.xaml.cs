@@ -132,21 +132,21 @@ namespace OWCE.Pages
             CustomToolbarItems.Add(scanningToolbarItem);
 
 #if DEBUG
-            var popupPage = new Rg.Plugins.Popup.Pages.PopupPage(); 
-
-            // Secret debug menu.
+            // Secret debug menu (for now)
             var debugToolbarItem = new CustomToolbarItem()
             {
                 Position = CustomToolbarItemPosition.Left,
                 IconImageSource = "burger_menu",
                 Command = new Command(() =>
                 {
-                    var debugMenu = new Popup.DebugBoardListPageSettingPopup();
-
-                    PopupNavigation.Instance.PushAsync(debugMenu);
+                    if (Parent.Parent is MainFlyoutPage mainFlyoutPage)
+                    {
+                        mainFlyoutPage.IsPresented = !mainFlyoutPage.IsPresented;
+                    }
                 }),
             };
             CustomToolbarItems.Add(debugToolbarItem);
+            
 #endif
 
             /*

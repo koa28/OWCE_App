@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<pages:BaseContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:OWCE.Pages"
+    x:Class="OWCE.Pages.DebugPreviousRecordingsPage"
+    Title="Previous Recordings">
+
+    <CollectionView ItemsSource="{Binding PreviousRecordings}" SelectionMode="Single" SelectionChanged="CollectionView_SelectionChanged">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+
+                <SwipeView>
+                    <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup Name="CommonStates">                        
+                        <VisualState Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="White" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+
+                    <SwipeView.RightItems>
+                        <SwipeItems>
+                            <SwipeItem Text="Delete"
+                                       BackgroundColor="Red"
+                                       Invoked="SwipeItem_Delete"
+                                        />
+                            <SwipeItem Text="Rename"
+                                       BackgroundColor="LightGray"
+                                       Invoked="SwipeItem_Rename"
+                                       />
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <!-- Content -->
+
+                    
+                    <Grid Padding="16" BackgroundColor="White">
+                        <Label Text="{Binding Name}" TextColor="Black" />
+                    </Grid>
+                </SwipeView>
+
+
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+    </CollectionView>
+</pages:BaseContentPage>

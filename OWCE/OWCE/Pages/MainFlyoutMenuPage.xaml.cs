@@ -7,7 +7,6 @@ namespace OWCE.Pages
 {
     public partial class MainFlyoutMenuPage : ContentPage
     {
-
         public MainFlyoutMenuPage()
         {
             InitializeComponent();
@@ -63,6 +62,17 @@ namespace OWCE.Pages
             {
                 mainFlyoutPage.GoToLogsPage();
             }
+        }
+
+
+        public void RecordingOptions_Tapped(object sender, EventArgs e)
+        {
+
+        }
+
+        public void PreviousRecordings_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(new CustomNavigationPage(new DebugPreviousRecordingsPage()));
         }
     }
 }

@@ -77,6 +77,7 @@ namespace OWCE
                 Directory.CreateDirectory(LogsDirectory);
             }
 
+
             InitializeComponent();
 
 #if DEBUG
@@ -92,8 +93,8 @@ namespace OWCE
 #else
             OWBLE = DependencyService.Get<IOWBLE>();
 #endif
-            //MainPage = new MainFlyoutPage();
-            MainPage = new NavigationPage(new BoardListPage());
+            MainPage = new MainFlyoutPage();
+            //MainPage = new NavigationPage(new BoardListPage());
 
 
 

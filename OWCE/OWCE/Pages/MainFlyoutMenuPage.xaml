@@ -7,9 +7,7 @@
     IconImageSource="hamburger.png"> 
 
     <ContentPage.Resources>
-        <Style TargetType="StackLayout">
-            <Setter Property="BackgroundColor" Value="{StaticResource darkBackgroundColor}" />
-        </Style>
+      
 
          <Style TargetType="Image">
             <Setter Property="WidthRequest" Value="20" />
@@ -17,11 +15,31 @@
         </Style>
 
          <Style TargetType="Label">
+            <Setter Property="TextColor" Value="Black "/>
             <Setter Property="FontSize" Value="18" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
         </Style>
     </ContentPage.Resources>
+
     <StackLayout Padding="20,40,20,20">
+
+        <Label Text="Debug Menu" FontAttributes="Bold" />
+        <StackLayout Orientation="Horizontal" Padding="10" Spacing="10">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="RecordingOptions_Tapped"/>
+            </StackLayout.GestureRecognizers>
+            <Image Source="menu_settings.png" />
+            <Label Text="Recording Options" />
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal" Padding="10" Spacing="10">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="PreviousRecordings_Tapped"/>
+            </StackLayout.GestureRecognizers>
+            <Image Source="menu_settings.png" />
+            <Label Text="Previous Recordings" />
+        </StackLayout>
+
 
         <!--<StackLayout Orientation="Horizontal" BackgroundColor="Transparent" >
             <Button CornerRadius="40" WidthRequest="80" HeightRequest="80" BackgroundColor="White" />
@@ -56,8 +74,7 @@
             <Image Source="menu_leaderboards.png" />
             <Label Text="Leaderboards" />
         </StackLayout>
-        -->
-
+        
         <StackLayout Orientation="Horizontal" Padding="10" Spacing="10">
             <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Settings_Tapped"/>
@@ -91,6 +108,7 @@
             <Image Source="menu_settings.png" />
             <Label Text="Logs" />
         </StackLayout>
-        
+        -->
+
     </StackLayout>
 </ContentPage>
