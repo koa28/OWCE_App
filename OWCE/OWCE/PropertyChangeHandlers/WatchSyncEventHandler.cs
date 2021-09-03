@@ -25,6 +25,8 @@ namespace OWCE.PropertyChangeHandlers
                 watchUpdates.Add("Voltage", voltage);
 
                 // For Quart, should add battery percent here
+                double pct = QuartVoltageConverter.GetPercentFromVoltage(voltage);
+                watchUpdates.Add("BatteryPercent", (int)pct);
             }
             if (propertyName == null || propertyName.Equals("RPM"))
             {
@@ -32,11 +34,11 @@ namespace OWCE.PropertyChangeHandlers
                 int speed = (int)RpmToSpeedConverter.ConvertFromRpm(rpm);
                 watchUpdates.Add("Speed", speed);
             }
-            if (propertyName == null || propertyName.Equals("BatteryPercent"))
-            {
-                int batteryPercent = board.BatteryPercent;
-                watchUpdates.Add("BatteryPercent", batteryPercent);
-            }
+            //if (propertyName == null || propertyName.Equals("BatteryPercent"))
+            //{
+            //    int batteryPercent = board.BatteryPercent;
+            //    watchUpdates.Add("BatteryPercent", batteryPercent);
+            //}
             if (propertyName == null || propertyName.Equals("TripOdometer"))
             {
                 ushort tripOdometer = board.TripOdometer;
