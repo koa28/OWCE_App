@@ -16,6 +16,9 @@ namespace OWCE.WatchOS.WatchOSExtension
 		WatchKit.WKInterfaceGroup batteryLabelGroup { get; set; }
 
 		[Outlet]
+		WatchKit.WKInterfaceLabel appStateLabel { get; set; }
+
+		[Outlet]
 		WatchKit.WKInterfaceLabel batteryPercentageLabel { get; set; }
 
 		[Outlet]
@@ -103,6 +106,11 @@ namespace OWCE.WatchOS.WatchOSExtension
 			if (voltageLabel != null) {
 				voltageLabel.Dispose ();
 				voltageLabel = null;
+			}
+
+			if (appStateLabel != null) {
+				appStateLabel.Dispose ();
+				appStateLabel = null;
 			}
 		}
 	}

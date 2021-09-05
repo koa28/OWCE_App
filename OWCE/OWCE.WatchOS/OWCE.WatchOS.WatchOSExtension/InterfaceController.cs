@@ -110,6 +110,10 @@ namespace OWCE.WatchOS.WatchOSExtension
                     // Update the speed units to mph or km/h
                     this.speedUnitsLabel.SetText((string)applicationContext["SpeedUnitsLabel"]);
                 }
+                if (applicationContext.ContainsKey("AppState"))
+                {
+                    this.appStateLabel.SetText((string)applicationContext["AppState"]);
+                }
             }
             catch (Exception ex)
             {

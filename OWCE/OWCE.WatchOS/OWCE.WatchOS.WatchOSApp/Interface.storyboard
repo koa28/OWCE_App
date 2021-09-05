@@ -83,9 +83,11 @@
                             </items>
                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                         </group>
+                        <label alignment="left" text="App State" numberOfLines="3" id="XF2-Yu-FRC"/>
                     </items>
                     <connections>
                         <outlet property="batteryLabelGroup" destination="jAC-3K-vDG" id="rEO-fu-JNm"/>
+                        <outlet property="appStateLabel" destination="XF2-Yu-FRC" id="kSg-wh-Ghe"/>
                         <outlet property="batteryPercentageLabel" destination="kEP-RA-nQQ" id="jHA-RH-Qko"/>
                         <outlet property="connectToBoardGroup" destination="udh-QH-9Jq" id="ysQ-7e-zFN"/>
                         <outlet property="errorMessages" destination="1IU-Bg-Gto" id="CMQ-DF-eT5"/>

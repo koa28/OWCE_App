@@ -83,7 +83,7 @@ namespace OWCE.Pages
 
         public BoardListPage() : base()
         {
-
+            App.Current.AppState = "BoardListPage";
             InitializeComponent();
             BindingContext = this;
 
@@ -169,6 +169,7 @@ namespace OWCE.Pages
             base.OnAppearing();
 
             //_selectedBoard = null;
+            App.Current.AppState = "BoardListPageAppeared";
 
 
             App.Current.OWBLE.ErrorOccurred += OWBLE_ErrorOccurred;
@@ -228,12 +229,16 @@ namespace OWCE.Pages
 
             if (await App.Current.OWBLE.ReadyToScan())
             {
+                App.Current.AppState = "BoardListPageReadyToScan";
+
                 await StartScanning();
             }
         }
 
         private async Task StartScanning()
         {
+            App.Current.AppState = "BoardListPageIsScanning";
+
             if (App.Current.OWBLE.IsScanning)
                 return;
 
@@ -310,6 +315,7 @@ namespace OWCE.Pages
                 Boards[boardIndex].IsAvailable = true;
                 Boards[boardIndex].NativePeripheral = board.NativePeripheral;
             }
+            App.Current.AppState = "BoardsScanned " + Boards.Count;
         }
 
         /*
@@ -378,8 +384,9 @@ namespace OWCE.Pages
                     {
                         await Navigation.PushModalAsync(new Xamarin.Forms.NavigationPage(new BoardPage(board)));
                         // Publish notification that board was connected
-                        IWatch watchService = DependencyService.Get<IWatch>();
-                        watchService.ListenForWatchMessages(board);
+                        App.Current.CurrentBoard = board;
+                        //IWatch watchService = DependencyService.Get<IWatch>();
+                        //watchService.ListenForWatchMessages(board);
                     }
                     /*
                     try

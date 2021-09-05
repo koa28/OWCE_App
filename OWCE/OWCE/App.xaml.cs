@@ -32,6 +32,9 @@ namespace OWCE
         public static new App Current => Application.Current as App;
         public IOWBLE OWBLE { get; private set; }
 
+        public string AppState { get; set; }
+        public OWBoard CurrentBoard { get; set; }
+
 #if DEBUG
         public const string OWCEApiServer = "api.dev.owce.app";
 #else
@@ -66,6 +69,10 @@ namespace OWCE
 
         public App()
         {
+            AppState = "Unknown";
+
+            IWatch watchService = DependencyService.Get<IWatch>();
+            watchService.ListenForWatchMessages(CurrentBoard);
 
             MetricDisplay = Preferences.Get("metric_display", System.Globalization.RegionInfo.CurrentRegion.IsMetric);
             _boardConnectionCode = UserSecretsManager.Settings["BoardConnectionCode"];
@@ -79,6 +86,7 @@ namespace OWCE
 
             InitializeComponent();
 
+            AppState = "Initialized";
 #if DEBUG
             // If simulator or emulator use MockOWBLE.
             if (DeviceInfo.DeviceType == DeviceType.Virtual)
@@ -107,6 +115,7 @@ namespace OWCE
             });
             Debug.WriteLine("After 1");
             */
+            AppState = "PostMainPage";
         }
 
         protected override void OnStart()
@@ -114,6 +123,7 @@ namespace OWCE
             // Handle when your app starts
             AppCenter.Start($"android={AppConstants.AppCenterAndroid};ios={AppConstants.AppCenteriOS}", typeof(Analytics), typeof(Crashes));
 
+            AppState = "AppStarted";
 
             /*
             var cancellationTokenSource = new CancellationTokenSource();
