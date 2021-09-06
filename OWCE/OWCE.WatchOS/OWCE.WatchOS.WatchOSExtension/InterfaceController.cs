@@ -20,21 +20,20 @@ namespace OWCE.WatchOS.WatchOSExtension
 
         private bool darkMode = true;
 
-        public override void Awake(NSObject context)
-        {
-            base.Awake(context);
-
-            // Configure interface objects here.
-            Console.WriteLine("{0} awake with context", this);
-
-            // Register for notifications, eg when the phone updates new
-            // values for speed, distance etc
-            WCSessionManager.SharedManager.MessageReceived += DidReceiveMessage;
-        }
+        //public override void Awake(NSObject context)
+        //{
+        //    base.Awake(context);
+        //    // Configure interface objects here.
+        //    // Console.WriteLine("{0} awake with context", this);
+        //}
 
         public override void WillActivate()
         {
             // This method is called when the watch view controller is about to be visible to the user.
+
+            // Register for messages, eg when the phone updates new
+            // values for speed, distance etc
+            WCSessionManager.SharedManager.MessageReceived += DidReceiveMessage;
 
             // Check whether session is active
             if (!WCSessionManager.SharedManager.IsReachable())
@@ -64,6 +63,10 @@ namespace OWCE.WatchOS.WatchOSExtension
         {
             // This method is called when the watch view controller is no longer visible to the user.
             source.Cancel();
+
+            // Unsubscribe to messages, so that we don't inadvertently act on
+            // phone messages while the watch app is inactive.
+            WCSessionManager.SharedManager.MessageReceived -= DidReceiveMessage;
         }
 
         // Called when the phone has new values to update on the watch display.
