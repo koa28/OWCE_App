@@ -885,6 +885,11 @@ namespace OWCE.Droid.DependencyImplementations
             _updatingRSSI = true;
             _bluetoothGatt?.ReadRemoteRssi();
         }
+
+        OWBaseBoard IOWBLE.GetBoardFromUUID(string uuidString)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

@@ -13,6 +13,8 @@ namespace OWCE.PropertyChangeHandlers
 
         public static readonly WatchSyncEventHandler Instance = new WatchSyncEventHandler();
 
+        public static Action ForceReconnect { get; set; }
+
         private Dictionary<string, object> watchUpdates = new Dictionary<string, object>();
 
         // Updates the watch with the given property
@@ -54,6 +56,7 @@ namespace OWCE.PropertyChangeHandlers
             {
                 watchUpdates.Add("SpeedUnitsLabel", App.Current.MetricDisplay ? "km/h" : "mph");
                 watchUpdates.Add("AppState", App.Current.AppState);
+                watchUpdates.Add("ReconnectingErrors", App.Current.ReconnectingErrors);
             }
             // TODO: Here we can implement delayed send
             FlushMessages();
@@ -101,6 +104,10 @@ namespace OWCE.PropertyChangeHandlers
                     // Watch just woke up -- send all current data to bring
                     // the watch up to speed
                     Instance.UpdateProperty(null, board);
+                }
+                else if (message.ContainsKey("ForceReconnect"))
+                {
+                    ForceReconnect?.Invoke();
                 }
             }
             catch (Exception ex)

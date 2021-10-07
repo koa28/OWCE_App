@@ -114,6 +114,10 @@ namespace OWCE.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            if (App.Current.CurrentBoard != null)
+            {
+                Board = App.Current.CurrentBoard;
+            }
         }
 
         protected override void OnDisappearing()
@@ -157,8 +161,8 @@ namespace OWCE.Pages
         {
             await App.Current.OWBLE.Disconnect();
             await Navigation.PopModalAsync();
-            IWatch watchService = DependencyService.Get<IWatch>();
-            watchService.StopListeningForWatchMessages();
+            //IWatch watchService = DependencyService.Get<IWatch>();
+            //watchService.StopListeningForWatchMessages();
         }
 
         private bool _isLogging = false;

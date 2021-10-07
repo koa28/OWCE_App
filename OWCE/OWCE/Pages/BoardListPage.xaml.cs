@@ -168,6 +168,14 @@ namespace OWCE.Pages
         {
             base.OnAppearing();
 
+            // If we connected via watch, then show the BoardPage
+            if (App.Current.CurrentBoard != null)
+            {
+                await Navigation.PushModalAsync(new Xamarin.Forms.NavigationPage(new BoardPage(App.Current.CurrentBoard)));
+                return;
+            }
+
+
             //_selectedBoard = null;
             App.Current.AppState = "BoardListPageAppeared";
 
@@ -237,7 +245,8 @@ namespace OWCE.Pages
 
         private async Task StartScanning()
         {
-            App.Current.AppState = "BoardListPageIsScanning";
+            var prevState = App.Current.AppState;
+            App.Current.AppState = prevState + "BoardListPageIsScanning";
 
             if (App.Current.OWBLE.IsScanning)
                 return;
@@ -257,10 +266,13 @@ namespace OWCE.Pages
 
             try
             {
+                App.Current.AppState = prevState + "BoardListPage StartScanning";
                 App.Current.OWBLE.StartScanning();
+                //App.Current.AppState = prevState + "BoardListPage FinishedStartScanning";
             }
             catch (Exception )
             {
+                App.Current.AppState = prevState + "BoardListPageIsScanning -- Exception";
                 var alert = new Pages.Popup.Alert("Error", "Could not scan for boards. Please ensure bluetooth is enabled and has correct permission to scan.");
                 await PopupNavigation.Instance.PushAsync(alert, true);
             }
@@ -378,6 +390,7 @@ namespace OWCE.Pages
                     }));
                     await PopupNavigation.Instance.PushAsync(connectingAlert, true);
 
+                    // Move this to a common location
                     var board = await App.Current.ConnectToBoard(baseBoard, cancellationTokenSource.Token);
                     await PopupNavigation.Instance.PopAllAsync();
                     if (board != null)

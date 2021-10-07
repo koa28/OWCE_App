@@ -13,6 +13,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Linq;
 using OWCE.Utils;
+using OWCE.PropertyChangeHandlers;
 
 [assembly: ExportFont("SairaExtraCondensed-Black.ttf")]
 [assembly: ExportFont("SairaExtraCondensed-Bold.ttf")]
@@ -33,6 +34,9 @@ namespace OWCE
         public IOWBLE OWBLE { get; private set; }
 
         public string AppState { get; set; }
+
+        // Just to print debug messages on the watch
+        public string ReconnectingErrors { get; set; }
         public OWBoard CurrentBoard { get; set; }
 
 #if DEBUG
@@ -70,9 +74,11 @@ namespace OWCE
         public App()
         {
             AppState = "Unknown";
+            ReconnectingErrors = "";
 
             IWatch watchService = DependencyService.Get<IWatch>();
             watchService.ListenForWatchMessages(CurrentBoard);
+            WatchSyncEventHandler.ForceReconnect += HandleForceReconnect;
 
             MetricDisplay = Preferences.Get("metric_display", System.Globalization.RegionInfo.CurrentRegion.IsMetric);
             _boardConnectionCode = UserSecretsManager.Settings["BoardConnectionCode"];
@@ -176,5 +182,40 @@ namespace OWCE
             OWBLE = null;
             */
         }
+
+        private async void HandleForceReconnect()
+        {
+            Console.WriteLine("ForceReconnect Invoked");
+            App.Current.ReconnectingErrors = "";
+            try
+            {
+                try
+                {
+                    await App.Current.OWBLE.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    // Ignore this exception -- the board might not even be connected in the first place
+                    Console.WriteLine("Already Disconnected: " + ex.Message);
+                }
+
+                OWBaseBoard baseBoard = App.Current.OWBLE.GetBoardFromUUID(App.Current.BoardId);
+                var cancellationTokenSource = new CancellationTokenSource();
+
+                var board = await App.Current.ConnectToBoard(baseBoard, cancellationTokenSource.Token);
+
+                board.Init();
+                _ = board.SubscribeToBLE();
+                App.Current.CurrentBoard = board;
+                App.Current.ReconnectingErrors = "Reconnect Success";
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error doing force reconnect: " + e.Message);
+                Console.WriteLine("Stack Trace: " + e.StackTrace);
+                App.Current.ReconnectingErrors = e.Message;
+            }
+        }
+
     }
 }

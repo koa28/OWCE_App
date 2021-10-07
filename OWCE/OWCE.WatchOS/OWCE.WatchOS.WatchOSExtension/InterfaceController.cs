@@ -117,6 +117,12 @@ namespace OWCE.WatchOS.WatchOSExtension
                 {
                     this.appStateLabel.SetText((string)applicationContext["AppState"]);
                 }
+                if (applicationContext.ContainsKey("ReconnectingErrors"))
+                {
+                    reconnectingProgressLAbel.SetHidden(true);
+                    ReconnectingErrors.SetHidden(false);
+                    ReconnectingErrors.SetText((string)applicationContext["ReconnectingErrors"]);
+                }
             }
             catch (Exception ex)
             {
@@ -180,6 +186,13 @@ namespace OWCE.WatchOS.WatchOSExtension
             toggleBatteryPressed();
         }
 
+        partial void forceReconnectButtonPressed()
+        {
+            reconnectingProgressLAbel.SetHidden(false);
+            ReconnectingErrors.SetHidden(true);
+            WCSessionManager.SharedManager.SendMessage(new Dictionary<string, object>() {
+                { "ForceReconnect", null } });
+        }
     }
 }
 

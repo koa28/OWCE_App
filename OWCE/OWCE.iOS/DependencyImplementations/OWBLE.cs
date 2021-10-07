@@ -186,9 +186,12 @@ namespace OWCE.MacOS.DependencyImplementations
         {
             if (_centralManager == null || _centralManager.IsScanning)
             {
+                if (_centralManager == null) { App.Current.AppState = "CentralManagerNull"; }
+                else if (_centralManager.IsScanning) { App.Current.AppState = "CentralManagerIsScanning"; }
                 return;
             }
 
+            App.Current.AppState = string.Format("CBCentralManagerState = {0}", _centralManager.State);
             if (_centralManager.State == CBCentralManagerState.PoweredOn)
             {
                 _centralManager.ScanForPeripherals(new CBUUID[] { OWBoard.ServiceUUID.ToCBUUID() }, new PeripheralScanningOptions { AllowDuplicatesKey = true });
@@ -365,6 +368,13 @@ namespace OWCE.MacOS.DependencyImplementations
         {
             Debug.WriteLine("CentralManager_DiscoveredPeripheral: " + peripheral.Name);
 
+            var board = GenerateBoardFromPeripheral(peripheral);
+
+            BoardDiscovered?.Invoke(board);
+        }
+
+        OWBaseBoard GenerateBoardFromPeripheral(CBPeripheral peripheral)
+        {
             var board = new OWBaseBoard()
             {
                 ID = peripheral.Identifier.ToString(),
@@ -372,8 +382,7 @@ namespace OWCE.MacOS.DependencyImplementations
                 IsAvailable = true,
                 NativePeripheral = peripheral,
             };
-
-            BoardDiscovered?.Invoke(board);
+            return board;
         }
 
         [Export("centralManager:didConnectPeripheral:")]
@@ -539,6 +548,7 @@ namespace OWCE.MacOS.DependencyImplementations
         public Task Disconnect()
         {
             Debug.WriteLine("Disconnect");
+            App.Current.CurrentBoard = null; // Is this the right place to do this?
             _requestingDisconnect = true;
             _disconnectionCompletionSource = new TaskCompletionSource<bool>();
             _centralManager.CancelPeripheralConnection(_peripheral);
@@ -665,5 +675,13 @@ namespace OWCE.MacOS.DependencyImplementations
             //throw new NotImplementedException();
         }
         #endregion
+
+        // Check for null
+        public OWBaseBoard GetBoardFromUUID(string uuidString)
+        {
+            NSUuid uuid = new NSUuid(uuidString);
+            CBPeripheral[] cBPeripherals = _centralManager.RetrievePeripheralsWithIdentifiers(new NSUuid[] { uuid });
+            return cBPeripherals.Length > 0 ? GenerateBoardFromPeripheral(cBPeripherals[0]) : null;
+        }
     }
 }

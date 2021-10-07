@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="18122" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="19162" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="18022"/>
+        <deployment identifier="watchOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="19044"/>
     </dependencies>
     <customFonts key="customFonts">
         <array key="SairaExtraCondensed-Black.ttf">
@@ -83,15 +84,28 @@
                             </items>
                             <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                         </group>
-                        <label alignment="left" text="App State" numberOfLines="3" id="XF2-Yu-FRC"/>
+                        <group width="1" alignment="left" layout="vertical" id="h6D-2g-6fk">
+                            <items>
+                                <label alignment="left" text="App State" numberOfLines="3" id="XF2-Yu-FRC"/>
+                                <button width="1" alignment="left" title="Reconnect" id="vyF-hc-eE0">
+                                    <connections>
+                                        <action selector="forceReconnectButtonPressed" destination="AgC-eL-Hgc" id="hAr-KL-kjY"/>
+                                    </connections>
+                                </button>
+                                <label alignment="left" hidden="YES" text="Reconnecting..." textAlignment="center" id="h38-c8-rM4"/>
+                                <label alignment="left" hidden="YES" text="Label" numberOfLines="3" id="Z5b-qA-I0G"/>
+                            </items>
+                        </group>
                     </items>
                     <connections>
-                        <outlet property="batteryLabelGroup" destination="jAC-3K-vDG" id="rEO-fu-JNm"/>
+                        <outlet property="ReconnectingErrors" destination="Z5b-qA-I0G" id="Plb-x2-YEM"/>
                         <outlet property="appStateLabel" destination="XF2-Yu-FRC" id="kSg-wh-Ghe"/>
+                        <outlet property="batteryLabelGroup" destination="jAC-3K-vDG" id="rEO-fu-JNm"/>
                         <outlet property="batteryPercentageLabel" destination="kEP-RA-nQQ" id="jHA-RH-Qko"/>
                         <outlet property="connectToBoardGroup" destination="udh-QH-9Jq" id="ysQ-7e-zFN"/>
                         <outlet property="errorMessages" destination="1IU-Bg-Gto" id="CMQ-DF-eT5"/>
                         <outlet property="myLabel" destination="rol-Vw-zN9" id="nd0-Bt-JFx"/>
+                        <outlet property="reconnectingProgressLAbel" destination="h38-c8-rM4" id="T4x-vK-eEt"/>
                         <outlet property="rideDetailsGroup" destination="ZR4-J3-7uD" id="LNV-Z8-gdA"/>
                         <outlet property="speedLabel" destination="jhG-AM-wAb" id="PJ6-Lz-A6L"/>
                         <outlet property="speedLabelGroup" destination="LmL-Ci-hqA" id="LD1-Gy-w63"/>

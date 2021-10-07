@@ -13,10 +13,10 @@ namespace OWCE.WatchOS.WatchOSExtension
 	partial class InterfaceController
 	{
 		[Outlet]
-		WatchKit.WKInterfaceGroup batteryLabelGroup { get; set; }
+		WatchKit.WKInterfaceLabel appStateLabel { get; set; }
 
 		[Outlet]
-		WatchKit.WKInterfaceLabel appStateLabel { get; set; }
+		WatchKit.WKInterfaceGroup batteryLabelGroup { get; set; }
 
 		[Outlet]
 		WatchKit.WKInterfaceLabel batteryPercentageLabel { get; set; }
@@ -29,6 +29,12 @@ namespace OWCE.WatchOS.WatchOSExtension
 
 		[Outlet]
 		WatchKit.WKInterfaceLabel myLabel { get; set; }
+
+		[Outlet]
+		WatchKit.WKInterfaceLabel ReconnectingErrors { get; set; }
+
+		[Outlet]
+		WatchKit.WKInterfaceLabel reconnectingProgressLAbel { get; set; }
 
 		[Outlet]
 		WatchKit.WKInterfaceGroup rideDetailsGroup { get; set; }
@@ -50,9 +56,17 @@ namespace OWCE.WatchOS.WatchOSExtension
 
 		[Action ("darkModeTogglePressed")]
 		partial void darkModeTogglePressed ();
+
+		[Action ("forceReconnectButtonPressed")]
+		partial void forceReconnectButtonPressed ();
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (appStateLabel != null) {
+				appStateLabel.Dispose ();
+				appStateLabel = null;
+			}
+
 			if (batteryLabelGroup != null) {
 				batteryLabelGroup.Dispose ();
 				batteryLabelGroup = null;
@@ -108,9 +122,14 @@ namespace OWCE.WatchOS.WatchOSExtension
 				voltageLabel = null;
 			}
 
-			if (appStateLabel != null) {
-				appStateLabel.Dispose ();
-				appStateLabel = null;
+			if (reconnectingProgressLAbel != null) {
+				reconnectingProgressLAbel.Dispose ();
+				reconnectingProgressLAbel = null;
+			}
+
+			if (ReconnectingErrors != null) {
+				ReconnectingErrors.Dispose ();
+				ReconnectingErrors = null;
 			}
 		}
 	}

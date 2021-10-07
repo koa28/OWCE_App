@@ -198,5 +198,10 @@ namespace OWCE
         {
             return Task.FromResult<bool>(true);
         }
+
+        OWBaseBoard IOWBLE.GetBoardFromUUID(string uuidString)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
