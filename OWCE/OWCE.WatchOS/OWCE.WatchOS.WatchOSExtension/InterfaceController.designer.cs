@@ -49,6 +49,9 @@ namespace OWCE.WatchOS.WatchOSExtension
 		WatchKit.WKInterfaceLabel speedUnitsLabel { get; set; }
 
 		[Outlet]
+		WatchKit.WKInterfaceLabel timeStartedLabel { get; set; }
+
+		[Outlet]
 		WatchKit.WKInterfaceLabel tripDistanceLabel { get; set; }
 
 		[Outlet]
@@ -92,6 +95,16 @@ namespace OWCE.WatchOS.WatchOSExtension
 				myLabel = null;
 			}
 
+			if (ReconnectingErrors != null) {
+				ReconnectingErrors.Dispose ();
+				ReconnectingErrors = null;
+			}
+
+			if (reconnectingProgressLAbel != null) {
+				reconnectingProgressLAbel.Dispose ();
+				reconnectingProgressLAbel = null;
+			}
+
 			if (rideDetailsGroup != null) {
 				rideDetailsGroup.Dispose ();
 				rideDetailsGroup = null;
@@ -122,14 +135,9 @@ namespace OWCE.WatchOS.WatchOSExtension
 				voltageLabel = null;
 			}
 
-			if (reconnectingProgressLAbel != null) {
-				reconnectingProgressLAbel.Dispose ();
-				reconnectingProgressLAbel = null;
-			}
-
-			if (ReconnectingErrors != null) {
-				ReconnectingErrors.Dispose ();
-				ReconnectingErrors = null;
+			if (timeStartedLabel != null) {
+				timeStartedLabel.Dispose ();
+				timeStartedLabel = null;
 			}
 		}
 	}

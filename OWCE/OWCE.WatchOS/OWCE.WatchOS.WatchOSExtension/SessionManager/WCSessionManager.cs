@@ -25,6 +25,8 @@ namespace WatchConnectivity
 		public event MessageReceivedHandler MessageReceived;
 		public delegate void MessageReceivedHandler(WCSession session, Dictionary<string, object> applicationContext);
 
+		public event WatchReachabilityChangeHandler WatchReachabilityChanged;
+		public delegate void WatchReachabilityChangeHandler(bool isReachable);
 
 		private WCSession validSession
 		{
@@ -80,6 +82,8 @@ namespace WatchConnectivity
 			{
 				// 😥 prompt the user to unlock their iOS device
 			}
+			// Notify the app (whoever is interested)
+			WatchReachabilityChanged(session.Reachable);
 		}
 
 		#region Application Context Methods

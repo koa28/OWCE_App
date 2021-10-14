@@ -87,6 +87,7 @@
                         <group width="1" alignment="left" layout="vertical" id="h6D-2g-6fk">
                             <items>
                                 <label alignment="left" text="App State" numberOfLines="3" id="XF2-Yu-FRC"/>
+                                <label alignment="left" text="XXX" id="rsI-Pi-7BP"/>
                                 <button width="1" alignment="left" title="Reconnect" id="vyF-hc-eE0">
                                     <connections>
                                         <action selector="forceReconnectButtonPressed" destination="AgC-eL-Hgc" id="hAr-KL-kjY"/>
@@ -110,6 +111,7 @@
                         <outlet property="speedLabel" destination="jhG-AM-wAb" id="PJ6-Lz-A6L"/>
                         <outlet property="speedLabelGroup" destination="LmL-Ci-hqA" id="LD1-Gy-w63"/>
                         <outlet property="speedUnitsLabel" destination="Hmi-dN-68Z" id="I8O-sq-d0Y"/>
+                        <outlet property="timeStartedLabel" destination="rsI-Pi-7BP" id="81P-mW-eJB"/>
                         <outlet property="tripDistanceLabel" destination="aCv-RU-pjH" id="wXT-oQ-UWB"/>
                         <outlet property="voltageLabel" destination="Y75-iU-HdX" id="LDC-Mb-J8a"/>
                     </connections>

@@ -17,6 +17,8 @@ namespace OWCE.PropertyChangeHandlers
 
         private Dictionary<string, object> watchUpdates = new Dictionary<string, object>();
 
+        public bool WatchReachable { get; set; }
+
         // Updates the watch with the given property
         // - propertyName: null if updating all properties
         private void UpdateProperty(string propertyName, OWBoard board)
@@ -27,39 +29,45 @@ namespace OWCE.PropertyChangeHandlers
                 if (propertyName == null || propertyName.Equals("BatteryVoltage"))
                 {
                     float voltage = board.BatteryVoltage;
-                    watchUpdates.Add("Voltage", voltage);
+                    watchUpdates["Voltage"] = voltage;
 
                     // For Quart, should add battery percent here
                     double pct = QuartVoltageConverter.GetPercentFromVoltage(voltage);
-                    watchUpdates.Add("BatteryPercent", (int)pct);
+                    watchUpdates["BatteryPercent"] =  (int)pct;
                 }
                 if (propertyName == null || propertyName.Equals("RPM"))
                 {
                     int rpm = board.RPM;
                     int speed = (int)RpmToSpeedConverter.ConvertFromRpm(rpm);
-                    watchUpdates.Add("Speed", speed);
+                    watchUpdates["Speed"] = speed;
                 }
                 //if (propertyName == null || propertyName.Equals("BatteryPercent"))
                 //{
                 //    int batteryPercent = board.BatteryPercent;
-                //    watchUpdates.Add("BatteryPercent", batteryPercent);
+                //    watchUpdates["BatteryPercent"] = batteryPercent;
                 //}
                 if (propertyName == null || propertyName.Equals("TripOdometer"))
                 {
                     ushort tripOdometer = board.TripOdometer;
                     string tripDescription = RotationsToDistanceConverter.ConvertRotationsToDistance(tripOdometer);
-                    watchUpdates.Add("Distance", tripDescription);
+                    watchUpdates["Distance"] = tripDescription;
                 }
             }
 
             if (propertyName == null)
             {
-                watchUpdates.Add("SpeedUnitsLabel", App.Current.MetricDisplay ? "km/h" : "mph");
-                watchUpdates.Add("AppState", App.Current.AppState);
-                watchUpdates.Add("ReconnectingErrors", App.Current.ReconnectingErrors);
+                watchUpdates["SpeedUnitsLabel"] = App.Current.MetricDisplay ? "km/h" : "mph";
+                watchUpdates["AppState"] = App.Current.AppState;
+                watchUpdates["ReconnectingErrors"] = App.Current.ReconnectingErrors;
+                watchUpdates["TimeStarted"] = App.Current.TimeStarted.ToString("yyyy-MM-dd HH:mm");
             }
             // TODO: Here we can implement delayed send
-            FlushMessages();
+            FlushMessagesIfNecessary(propertyName != null);
+        }
+
+        private void FlushMessagesIfNecessary(bool checkForWatchReachability)
+        {
+            if (!checkForWatchReachability || WatchReachable) { FlushMessages(); }
         }
 
         private void FlushMessages()

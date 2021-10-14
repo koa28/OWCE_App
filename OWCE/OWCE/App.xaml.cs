@@ -39,6 +39,8 @@ namespace OWCE
         public string ReconnectingErrors { get; set; }
         public OWBoard CurrentBoard { get; set; }
 
+        public DateTime TimeStarted = DateTime.Now;
+
 #if DEBUG
         public const string OWCEApiServer = "api.dev.owce.app";
 #else
@@ -157,11 +159,26 @@ namespace OWCE
         protected override void OnSleep()
         {
             // Handle when your app sleeps
+            Console.WriteLine("App.xaml OnSleep");
         }
 
         protected override void OnResume()
         {
             // Handle when your app resumes
+            Console.WriteLine("App.xaml OnResume");
+
+            // If we connected via watch, then show the BoardPage
+            if (Current.CurrentBoard != null)
+            {
+                //MainPage.Navigation.PushModalAsync(new Xamarin.Forms.NavigationPage(new BoardPage(App.Current.CurrentBoard)));
+            }
+
+            var navigationStack = Current.MainPage.Navigation.NavigationStack;
+            if (navigationStack.Count > 0)
+            {
+                var page = navigationStack.Last();
+                Console.WriteLine("Current Page Type: " + page.GetType().Name);
+            }
         }
 
         internal async Task<OWBoard> ConnectToBoard(OWBaseBoard baseBoard, CancellationToken token)

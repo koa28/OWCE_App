@@ -23,6 +23,7 @@ namespace OWCE.iOS.DependencyImplementations
         {
             _board = board;
             WCSessionManager.SharedManager.MessageReceived += DidReceiveMessage;
+            WCSessionManager.SharedManager.WatchReachabilityChanged += WatchReachabilityChanged;
         }
 
         void IWatch.StopListeningForWatchMessages()
@@ -33,6 +34,11 @@ namespace OWCE.iOS.DependencyImplementations
         public void DidReceiveMessage(WCSession session, Dictionary<string, object> message)
         {
             WatchSyncEventHandler.HandleWatchMessage(message, _board);
+        }
+
+        private void WatchReachabilityChanged(bool isReachable)
+        {
+            WatchSyncEventHandler.Instance.WatchReachable = isReachable;
         }
     }
 }

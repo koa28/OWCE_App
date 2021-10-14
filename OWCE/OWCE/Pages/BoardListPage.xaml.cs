@@ -168,13 +168,6 @@ namespace OWCE.Pages
         {
             base.OnAppearing();
 
-            // If we connected via watch, then show the BoardPage
-            if (App.Current.CurrentBoard != null)
-            {
-                await Navigation.PushModalAsync(new Xamarin.Forms.NavigationPage(new BoardPage(App.Current.CurrentBoard)));
-                return;
-            }
-
 
             //_selectedBoard = null;
             App.Current.AppState = "BoardListPageAppeared";
@@ -240,6 +233,13 @@ namespace OWCE.Pages
                 App.Current.AppState = "BoardListPageReadyToScan";
 
                 await StartScanning();
+                var t = Task.Run(async delegate
+                {
+                    await Task.Delay(30000);
+                    StopScanning();
+                    App.Current.AppState = "StopScan BoardListPage OnAppearing";
+                });
+
             }
         }
 

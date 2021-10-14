@@ -117,6 +117,10 @@ namespace OWCE.WatchOS.WatchOSExtension
                 {
                     this.appStateLabel.SetText((string)applicationContext["AppState"]);
                 }
+                if (applicationContext.ContainsKey("TimeStarted"))
+                {
+                    this.timeStartedLabel.SetText((string)applicationContext["TimeStarted"]);
+                }
                 if (applicationContext.ContainsKey("ReconnectingErrors"))
                 {
                     reconnectingProgressLAbel.SetHidden(true);
