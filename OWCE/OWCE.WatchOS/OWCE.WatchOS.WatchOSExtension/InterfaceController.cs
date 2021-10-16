@@ -123,9 +123,13 @@ namespace OWCE.WatchOS.WatchOSExtension
                 }
                 if (applicationContext.ContainsKey("ReconnectingErrors"))
                 {
-                    reconnectingProgressLAbel.SetHidden(true);
-                    ReconnectingErrors.SetHidden(false);
-                    ReconnectingErrors.SetText((string)applicationContext["ReconnectingErrors"]);
+                    reconnectingProgressLabel.SetHidden(true);
+                    reconnectingErrors.SetHidden(false);
+                    reconnectingErrors.SetText((string)applicationContext["ReconnectingErrors"]);
+                }
+                if (applicationContext.ContainsKey("BoardName"))
+                {
+                    boardNameLabel.SetText((string)applicationContext["BoardName"]);
                 }
             }
             catch (Exception ex)
@@ -192,8 +196,8 @@ namespace OWCE.WatchOS.WatchOSExtension
 
         partial void forceReconnectButtonPressed()
         {
-            reconnectingProgressLAbel.SetHidden(false);
-            ReconnectingErrors.SetHidden(true);
+            reconnectingProgressLabel.SetHidden(false);
+            reconnectingErrors.SetHidden(true);
             WCSessionManager.SharedManager.SendMessage(new Dictionary<string, object>() {
                 { "ForceReconnect", null } });
         }

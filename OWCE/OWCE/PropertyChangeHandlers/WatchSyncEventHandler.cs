@@ -60,6 +60,7 @@ namespace OWCE.PropertyChangeHandlers
                 watchUpdates["AppState"] = App.Current.AppState;
                 watchUpdates["ReconnectingErrors"] = App.Current.ReconnectingErrors;
                 watchUpdates["TimeStarted"] = App.Current.TimeStarted.ToString("yyyy-MM-dd HH:mm");
+                watchUpdates["BoardName"] = App.Current.CurrentBoard == null ? "Board: null" : App.Current.CurrentBoard.Name;
             }
             // TODO: Here we can implement delayed send
             FlushMessagesIfNecessary(propertyName != null);

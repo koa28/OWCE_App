@@ -22,6 +22,9 @@ namespace OWCE.WatchOS.WatchOSExtension
 		WatchKit.WKInterfaceLabel batteryPercentageLabel { get; set; }
 
 		[Outlet]
+		WatchKit.WKInterfaceLabel boardNameLabel { get; set; }
+
+		[Outlet]
 		WatchKit.WKInterfaceGroup connectToBoardGroup { get; set; }
 
 		[Outlet]
@@ -31,10 +34,10 @@ namespace OWCE.WatchOS.WatchOSExtension
 		WatchKit.WKInterfaceLabel myLabel { get; set; }
 
 		[Outlet]
-		WatchKit.WKInterfaceLabel ReconnectingErrors { get; set; }
+		WatchKit.WKInterfaceLabel reconnectingErrors { get; set; }
 
 		[Outlet]
-		WatchKit.WKInterfaceLabel reconnectingProgressLAbel { get; set; }
+		WatchKit.WKInterfaceLabel reconnectingProgressLabel { get; set; }
 
 		[Outlet]
 		WatchKit.WKInterfaceGroup rideDetailsGroup { get; set; }
@@ -95,14 +98,14 @@ namespace OWCE.WatchOS.WatchOSExtension
 				myLabel = null;
 			}
 
-			if (ReconnectingErrors != null) {
-				ReconnectingErrors.Dispose ();
-				ReconnectingErrors = null;
+			if (reconnectingErrors != null) {
+				reconnectingErrors.Dispose ();
+				reconnectingErrors = null;
 			}
 
-			if (reconnectingProgressLAbel != null) {
-				reconnectingProgressLAbel.Dispose ();
-				reconnectingProgressLAbel = null;
+			if (reconnectingProgressLabel != null) {
+				reconnectingProgressLabel.Dispose ();
+				reconnectingProgressLabel = null;
 			}
 
 			if (rideDetailsGroup != null) {
@@ -125,6 +128,16 @@ namespace OWCE.WatchOS.WatchOSExtension
 				speedUnitsLabel = null;
 			}
 
+			if (timeStartedLabel != null) {
+				timeStartedLabel.Dispose ();
+				timeStartedLabel = null;
+			}
+
+			if (boardNameLabel != null) {
+				boardNameLabel.Dispose ();
+				boardNameLabel = null;
+			}
+
 			if (tripDistanceLabel != null) {
 				tripDistanceLabel.Dispose ();
 				tripDistanceLabel = null;
@@ -133,11 +146,6 @@ namespace OWCE.WatchOS.WatchOSExtension
 			if (voltageLabel != null) {
 				voltageLabel.Dispose ();
 				voltageLabel = null;
-			}
-
-			if (timeStartedLabel != null) {
-				timeStartedLabel.Dispose ();
-				timeStartedLabel = null;
 			}
 		}
 	}

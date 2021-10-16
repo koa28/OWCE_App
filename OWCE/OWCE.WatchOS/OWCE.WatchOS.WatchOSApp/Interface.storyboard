@@ -88,6 +88,7 @@
                             <items>
                                 <label alignment="left" text="App State" numberOfLines="3" id="XF2-Yu-FRC"/>
                                 <label alignment="left" text="XXX" id="rsI-Pi-7BP"/>
+                                <label alignment="left" text="Label" id="5Tp-Y1-6J0"/>
                                 <button width="1" alignment="left" title="Reconnect" id="vyF-hc-eE0">
                                     <connections>
                                         <action selector="forceReconnectButtonPressed" destination="AgC-eL-Hgc" id="hAr-KL-kjY"/>
@@ -99,14 +100,15 @@
                         </group>
                     </items>
                     <connections>
-                        <outlet property="ReconnectingErrors" destination="Z5b-qA-I0G" id="Plb-x2-YEM"/>
                         <outlet property="appStateLabel" destination="XF2-Yu-FRC" id="kSg-wh-Ghe"/>
                         <outlet property="batteryLabelGroup" destination="jAC-3K-vDG" id="rEO-fu-JNm"/>
                         <outlet property="batteryPercentageLabel" destination="kEP-RA-nQQ" id="jHA-RH-Qko"/>
+                        <outlet property="boardNameLabel" destination="5Tp-Y1-6J0" id="rP3-CC-hQf"/>
                         <outlet property="connectToBoardGroup" destination="udh-QH-9Jq" id="ysQ-7e-zFN"/>
                         <outlet property="errorMessages" destination="1IU-Bg-Gto" id="CMQ-DF-eT5"/>
                         <outlet property="myLabel" destination="rol-Vw-zN9" id="nd0-Bt-JFx"/>
-                        <outlet property="reconnectingProgressLAbel" destination="h38-c8-rM4" id="T4x-vK-eEt"/>
+                        <outlet property="reconnectingErrors" destination="Z5b-qA-I0G" id="Plb-x2-YEM"/>
+                        <outlet property="reconnectingProgressLabel" destination="h38-c8-rM4" id="T4x-vK-eEt"/>
                         <outlet property="rideDetailsGroup" destination="ZR4-J3-7uD" id="LNV-Z8-gdA"/>
                         <outlet property="speedLabel" destination="jhG-AM-wAb" id="PJ6-Lz-A6L"/>
                         <outlet property="speedLabelGroup" destination="LmL-Ci-hqA" id="LD1-Gy-w63"/>
