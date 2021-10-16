@@ -131,6 +131,10 @@ namespace OWCE.WatchOS.WatchOSExtension
                 {
                     boardNameLabel.SetText((string)applicationContext["BoardName"]);
                 }
+                if (applicationContext.ContainsKey("BoardConnectionState"))
+                {
+                    boardConnectionStateLabel.SetText((string)applicationContext["BoardConnectionState"]);
+                }
             }
             catch (Exception ex)
             {

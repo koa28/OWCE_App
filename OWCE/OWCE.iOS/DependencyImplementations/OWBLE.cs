@@ -394,6 +394,7 @@ namespace OWCE.MacOS.DependencyImplementations
             {
                 _reconnecting = false;
                 BoardReconnected?.Invoke();
+                App.Current.ConnectionState = BoardConnectionState.Connected;
             }
             else
             {
@@ -530,6 +531,7 @@ namespace OWCE.MacOS.DependencyImplementations
         {
             // Disconnect was because board lost connection.
             BoardReconnecting?.Invoke();
+            App.Current.ConnectionState = BoardConnectionState.Reconnecting;
             _reconnecting = true;
 
             var options = new PeripheralConnectionOptions()
@@ -549,6 +551,7 @@ namespace OWCE.MacOS.DependencyImplementations
         {
             Debug.WriteLine("Disconnect");
             App.Current.CurrentBoard = null; // Is this the right place to do this?
+            App.Current.ConnectionState = BoardConnectionState.Disconnected;
             _requestingDisconnect = true;
             _disconnectionCompletionSource = new TaskCompletionSource<bool>();
             _centralManager.CancelPeripheralConnection(_peripheral);

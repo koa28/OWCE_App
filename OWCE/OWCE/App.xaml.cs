@@ -26,6 +26,13 @@ using OWCE.PropertyChangeHandlers;
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace OWCE
 {
+    public enum BoardConnectionState
+    {
+        Disconnected,
+        Connected,
+        Reconnecting
+    }
+
     public partial class App : Application
     {
         public const string UnitDisplayUpdatedKey = "UnitDisplayUpdated";
@@ -40,6 +47,7 @@ namespace OWCE
         public OWBoard CurrentBoard { get; set; }
 
         public DateTime TimeStarted = DateTime.Now;
+        public BoardConnectionState ConnectionState { get; set; }
 
 #if DEBUG
         public const string OWCEApiServer = "api.dev.owce.app";
@@ -77,6 +85,7 @@ namespace OWCE
         {
             AppState = "Unknown";
             ReconnectingErrors = "";
+            ConnectionState = BoardConnectionState.Disconnected;
 
             IWatch watchService = DependencyService.Get<IWatch>();
             watchService.ListenForWatchMessages(CurrentBoard);

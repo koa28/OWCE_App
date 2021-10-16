@@ -22,6 +22,9 @@ namespace OWCE.WatchOS.WatchOSExtension
 		WatchKit.WKInterfaceLabel batteryPercentageLabel { get; set; }
 
 		[Outlet]
+		WatchKit.WKInterfaceLabel boardConnectionStateLabel { get; set; }
+
+		[Outlet]
 		WatchKit.WKInterfaceLabel boardNameLabel { get; set; }
 
 		[Outlet]
@@ -83,9 +86,19 @@ namespace OWCE.WatchOS.WatchOSExtension
 				batteryPercentageLabel = null;
 			}
 
+			if (boardNameLabel != null) {
+				boardNameLabel.Dispose ();
+				boardNameLabel = null;
+			}
+
 			if (connectToBoardGroup != null) {
 				connectToBoardGroup.Dispose ();
 				connectToBoardGroup = null;
+			}
+
+			if (boardConnectionStateLabel != null) {
+				boardConnectionStateLabel.Dispose ();
+				boardConnectionStateLabel = null;
 			}
 
 			if (errorMessages != null) {
@@ -131,11 +144,6 @@ namespace OWCE.WatchOS.WatchOSExtension
 			if (timeStartedLabel != null) {
 				timeStartedLabel.Dispose ();
 				timeStartedLabel = null;
-			}
-
-			if (boardNameLabel != null) {
-				boardNameLabel.Dispose ();
-				boardNameLabel = null;
 			}
 
 			if (tripDistanceLabel != null) {

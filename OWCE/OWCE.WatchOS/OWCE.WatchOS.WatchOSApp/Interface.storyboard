@@ -89,6 +89,7 @@
                                 <label alignment="left" text="App State" numberOfLines="3" id="XF2-Yu-FRC"/>
                                 <label alignment="left" text="XXX" id="rsI-Pi-7BP"/>
                                 <label alignment="left" text="Label" id="5Tp-Y1-6J0"/>
+                                <label alignment="left" text="Label" id="9RR-8V-RBh"/>
                                 <button width="1" alignment="left" title="Reconnect" id="vyF-hc-eE0">
                                     <connections>
                                         <action selector="forceReconnectButtonPressed" destination="AgC-eL-Hgc" id="hAr-KL-kjY"/>
@@ -103,6 +104,7 @@
                         <outlet property="appStateLabel" destination="XF2-Yu-FRC" id="kSg-wh-Ghe"/>
                         <outlet property="batteryLabelGroup" destination="jAC-3K-vDG" id="rEO-fu-JNm"/>
                         <outlet property="batteryPercentageLabel" destination="kEP-RA-nQQ" id="jHA-RH-Qko"/>
+                        <outlet property="boardConnectionStateLabel" destination="9RR-8V-RBh" id="vLP-HP-3In"/>
                         <outlet property="boardNameLabel" destination="5Tp-Y1-6J0" id="rP3-CC-hQf"/>
                         <outlet property="connectToBoardGroup" destination="udh-QH-9Jq" id="ysQ-7e-zFN"/>
                         <outlet property="errorMessages" destination="1IU-Bg-Gto" id="CMQ-DF-eT5"/>

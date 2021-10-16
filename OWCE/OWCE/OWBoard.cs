@@ -820,6 +820,7 @@ namespace OWCE
                 var data = await _owble.ReadValue(characteristic);
                 SetValue(characteristic, data, true);
             }
+            App.Current.ConnectionState = BoardConnectionState.Connected;
 
         }
 
