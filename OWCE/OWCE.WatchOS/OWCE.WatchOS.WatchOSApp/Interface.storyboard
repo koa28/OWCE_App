@@ -96,7 +96,12 @@
                                     </connections>
                                 </button>
                                 <label alignment="left" hidden="YES" text="Reconnecting..." textAlignment="center" id="h38-c8-rM4"/>
-                                <label alignment="left" hidden="YES" text="Label" numberOfLines="3" id="Z5b-qA-I0G"/>
+                                <label alignment="left" text=" " numberOfLines="3" id="Z5b-qA-I0G"/>
+                                <button width="1" alignment="left" title="Disconnect" id="xVO-pK-vTX">
+                                    <connections>
+                                        <action selector="forceDisconnectButtonPressed" destination="AgC-eL-Hgc" id="muC-NW-KmP"/>
+                                    </connections>
+                                </button>
                             </items>
                         </group>
                     </items>

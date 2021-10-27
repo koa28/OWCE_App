@@ -66,6 +66,9 @@ namespace OWCE.WatchOS.WatchOSExtension
 		[Action ("darkModeTogglePressed")]
 		partial void darkModeTogglePressed ();
 
+		[Action ("forceDisconnectButtonPressed")]
+		partial void forceDisconnectButtonPressed ();
+
 		[Action ("forceReconnectButtonPressed")]
 		partial void forceReconnectButtonPressed ();
 		
@@ -86,6 +89,11 @@ namespace OWCE.WatchOS.WatchOSExtension
 				batteryPercentageLabel = null;
 			}
 
+			if (boardConnectionStateLabel != null) {
+				boardConnectionStateLabel.Dispose ();
+				boardConnectionStateLabel = null;
+			}
+
 			if (boardNameLabel != null) {
 				boardNameLabel.Dispose ();
 				boardNameLabel = null;
@@ -94,11 +102,6 @@ namespace OWCE.WatchOS.WatchOSExtension
 			if (connectToBoardGroup != null) {
 				connectToBoardGroup.Dispose ();
 				connectToBoardGroup = null;
-			}
-
-			if (boardConnectionStateLabel != null) {
-				boardConnectionStateLabel.Dispose ();
-				boardConnectionStateLabel = null;
 			}
 
 			if (errorMessages != null) {

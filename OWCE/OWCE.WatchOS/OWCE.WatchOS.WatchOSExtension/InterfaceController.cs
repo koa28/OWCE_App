@@ -205,6 +205,13 @@ namespace OWCE.WatchOS.WatchOSExtension
             WCSessionManager.SharedManager.SendMessage(new Dictionary<string, object>() {
                 { "ForceReconnect", null } });
         }
+
+        partial void forceDisconnectButtonPressed()
+        {
+            WCSessionManager.SharedManager.SendMessage(new Dictionary<string, object>() {
+                { "ForceDisconnect", null } });
+        }
+
     }
 }
 
