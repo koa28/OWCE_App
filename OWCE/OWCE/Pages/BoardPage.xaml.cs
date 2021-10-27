@@ -32,9 +32,9 @@ namespace OWCE.Pages
 
         private bool _initialSubscirbe = false;
 
+        public BoardPage(OWBoard board) : this(board, true) {}
 
-
-        public BoardPage(OWBoard board) : base()
+        public BoardPage(OWBoard board, bool initBLE) : base()
         {
             Board = board;
 
@@ -46,10 +46,12 @@ namespace OWCE.Pages
 
             ImperialSwitch.IsToggled = !App.Current.MetricDisplay;
 
-
-            Board.Init();
-            // I really don't like this.
-            _ = Board.SubscribeToBLE();
+            if (initBLE)
+            {
+                Board.Init();
+                // I really don't like this.
+                _ = Board.SubscribeToBLE();
+            }
 
             App.Current.OWBLE.BoardDisconnected += OWBLE_BoardDisconnected;
             App.Current.OWBLE.BoardReconnecting += OWBLE_BoardReconnecting;

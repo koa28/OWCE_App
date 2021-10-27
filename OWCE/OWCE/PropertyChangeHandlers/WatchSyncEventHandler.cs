@@ -14,6 +14,7 @@ namespace OWCE.PropertyChangeHandlers
         public static readonly WatchSyncEventHandler Instance = new WatchSyncEventHandler();
 
         public static Action ForceReconnect { get; set; }
+        public static Action ForceDisconnect { get; set; }
 
         private Dictionary<string, object> watchUpdates = new Dictionary<string, object>();
 
@@ -118,6 +119,10 @@ namespace OWCE.PropertyChangeHandlers
                 else if (message.ContainsKey("ForceReconnect"))
                 {
                     ForceReconnect?.Invoke();
+                }
+                else if (message.ContainsKey("ForceDisconnect"))
+                {
+                    ForceDisconnect?.Invoke();
                 }
             }
             catch (Exception ex)

@@ -90,6 +90,7 @@ namespace OWCE
             IWatch watchService = DependencyService.Get<IWatch>();
             watchService.ListenForWatchMessages(CurrentBoard);
             WatchSyncEventHandler.ForceReconnect += HandleForceReconnect;
+            WatchSyncEventHandler.ForceDisconnect += HandleForceDisconnect;
 
             MetricDisplay = Preferences.Get("metric_display", System.Globalization.RegionInfo.CurrentRegion.IsMetric);
             _boardConnectionCode = UserSecretsManager.Settings["BoardConnectionCode"];
@@ -176,17 +177,24 @@ namespace OWCE
             // Handle when your app resumes
             Console.WriteLine("App.xaml OnResume");
 
-            // If we connected via watch, then show the BoardPage
-            if (Current.CurrentBoard != null)
-            {
-                //MainPage.Navigation.PushModalAsync(new Xamarin.Forms.NavigationPage(new BoardPage(App.Current.CurrentBoard)));
-            }
-
             var navigationStack = Current.MainPage.Navigation.NavigationStack;
             if (navigationStack.Count > 0)
             {
                 var page = navigationStack.Last();
                 Console.WriteLine("Current Page Type: " + page.GetType().Name);
+                if (typeof(BoardListPage).IsInstanceOfType(page) &&
+                    Current.ConnectionState.Equals(BoardConnectionState.Disconnected))
+                {
+                    // Pop out to board list page
+                    Current.MainPage.Navigation.PopModalAsync();
+                }
+                else if (typeof(BoardListPage).IsInstanceOfType(page) &&
+                    Current.ConnectionState.Equals(BoardConnectionState.Connected))
+                {
+                    // Push the board page
+                    Console.WriteLine("Pushing Board Page");
+                    Current.MainPage.Navigation.PushModalAsync(new Xamarin.Forms.NavigationPage(new BoardPage(App.Current.CurrentBoard, false)));
+                }
             }
         }
 
@@ -209,21 +217,26 @@ namespace OWCE
             */
         }
 
+        private async void HandleForceDisconnect()
+        {
+            try
+            {
+                await App.Current.OWBLE.Disconnect();
+            }
+            catch (Exception ex)
+            {
+                // Ignore this exception -- the board might not even be connected in the first place
+                Console.WriteLine("Already Disconnected: " + ex.Message);
+            }
+        }
+
         private async void HandleForceReconnect()
         {
             Console.WriteLine("ForceReconnect Invoked");
             App.Current.ReconnectingErrors = "";
             try
             {
-                try
-                {
-                    await App.Current.OWBLE.Disconnect();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore this exception -- the board might not even be connected in the first place
-                    Console.WriteLine("Already Disconnected: " + ex.Message);
-                }
+                HandleForceDisconnect();
 
                 OWBaseBoard baseBoard = App.Current.OWBLE.GetBoardFromUUID(App.Current.BoardId);
                 var cancellationTokenSource = new CancellationTokenSource();
