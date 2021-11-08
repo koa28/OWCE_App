@@ -9,5 +9,12 @@ namespace OWCE
         BatteryPercent,
         Distance,
         SpeedUnitsLabel,
+        AppState,
+        ReconnectingErrors,
+        TimeStarted,
+        BoardName,
+        BoardConnectionState,
+        ForceReconnect,
+        ForceDisconnect,
     }
 }

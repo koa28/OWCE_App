@@ -29,6 +29,7 @@ namespace OWCE.PropertyChangeHandlers
             if (board != null)
             {
                 if (propertyName == null || propertyName.Equals("BatteryVoltage"))
+                {
                     float voltage = board.BatteryVoltage;
                     watchUpdates[WatchMessage.Voltage] = voltage;
 
