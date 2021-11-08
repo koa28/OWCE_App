@@ -20,13 +20,6 @@ namespace OWCE.WatchOS.WatchOSExtension
 
         private bool darkMode = true;
 
-        //public override void Awake(NSObject context)
-        //{
-        //    base.Awake(context);
-        //    // Configure interface objects here.
-        //    // Console.WriteLine("{0} awake with context", this);
-        //}
-
         public override void WillActivate()
         {
             // This method is called when the watch view controller is about to be visible to the user.
@@ -44,8 +37,8 @@ namespace OWCE.WatchOS.WatchOSExtension
             }
 
             // Send message to Phone to tell it to update with latest values
-            WCSessionManager.SharedManager.SendMessage(new Dictionary<string, object>() {
-                { "WatchAppAwake", null } });
+            WCSessionManager.SharedManager.SendMessage(new Dictionary<WatchMessage, object>() {
+                { WatchMessage.Awake, 0 } });
 
             // If we don't hear back from the phone within 3 secs, then assume
             // the phone is disconnected from the board.
@@ -71,8 +64,9 @@ namespace OWCE.WatchOS.WatchOSExtension
 
         // Called when the phone has new values to update on the watch display.
         // Messages are mostly sent from Watch.cs on phone side
-        public void DidReceiveMessage(WCSession session, Dictionary<string, object> applicationContext)
-        {   try
+        public void DidReceiveMessage(WCSession session, Dictionary<WatchMessage, object> messages)
+        {
+            try
             {
                 // Since we got a response from the phone, cancel the timer
                 // task that would have prompted the user to connect to the board on the phone
@@ -83,62 +77,67 @@ namespace OWCE.WatchOS.WatchOSExtension
                 HideConnectToBoardViaPhoneMessage();
 
                 // Now process the message itself
-                if (applicationContext.ContainsKey("MessagePhone"))
+                foreach (var message in messages)
                 {
-                    var message = (string)applicationContext["MessagePhone"];
-                    if (message != null)
+                    /*
+                    if (message.Key == WatchMessage.MessagePhone)
                     {
-                        Console.WriteLine($"Application context update received : {message}");
-                        this.myLabel.SetText(message);
+                        var messageString = message.Value as string;
+                        if (messageString != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Application context update received : {messageString}");
+                            this.myLabel.SetText(messageString);
+                        }
                     }
-                }
-                if (applicationContext.ContainsKey("BatteryPercent"))
-                {
-                    this.batteryPercentageLabel.SetText($"{applicationContext["BatteryPercent"]}%");
-                }
-                if (applicationContext.ContainsKey("Speed"))
-                {
-                    this.speedLabel.SetText(String.Format("{0:F0}", applicationContext["Speed"]));
-                }
-                if (applicationContext.ContainsKey("Voltage"))
-                {
-                    this.voltageLabel.SetText(String.Format("{0:F2}V", applicationContext["Voltage"]));
-                }
-                if (applicationContext.ContainsKey("Distance"))
-                {
-                    this.tripDistanceLabel.SetText((string)applicationContext["Distance"]);
-                }
-                if (applicationContext.ContainsKey("SpeedUnitsLabel"))
-                {
-                    // Update the speed units to mph or km/h
-                    this.speedUnitsLabel.SetText((string)applicationContext["SpeedUnitsLabel"]);
-                }
-                if (applicationContext.ContainsKey("AppState"))
-                {
-                    this.appStateLabel.SetText((string)applicationContext["AppState"]);
-                }
-                if (applicationContext.ContainsKey("TimeStarted"))
-                {
-                    this.timeStartedLabel.SetText((string)applicationContext["TimeStarted"]);
-                }
-                if (applicationContext.ContainsKey("ReconnectingErrors"))
-                {
-                    reconnectingProgressLabel.SetHidden(true);
-                    reconnectingErrors.SetHidden(false);
-                    reconnectingErrors.SetText((string)applicationContext["ReconnectingErrors"]);
-                }
-                if (applicationContext.ContainsKey("BoardName"))
-                {
-                    boardNameLabel.SetText((string)applicationContext["BoardName"]);
-                }
-                if (applicationContext.ContainsKey("BoardConnectionState"))
-                {
-                    boardConnectionStateLabel.SetText((string)applicationContext["BoardConnectionState"]);
+                    else */
+                    if (message.Key == WatchMessage.BatteryPercent)
+                    {
+                        this.batteryPercentageLabel.SetText($"{message.Value}%");
+                    }
+                    else if(message.Key == WatchMessage.Speed)
+                    {
+                        this.speedLabel.SetText(String.Format("{0:F0}", message.Value));
+                    }
+                    else if(message.Key == WatchMessage.Voltage)
+                    {
+                        this.voltageLabel.SetText(String.Format("{0:F2}V", message.Value));
+                    }
+                    else if(message.Key == WatchMessage.Distance)
+                    {
+                        this.tripDistanceLabel.SetText(message.Value as string);
+                    }
+                    else if(message.Key == WatchMessage.SpeedUnitsLabel)
+                    {
+                        // Update the speed units to mph or km/h
+                        this.speedUnitsLabel.SetText(message.Value as string);
+                    }
+                    else if(message.Key == WatchMessage.AppState)
+                    {
+                        this.appStateLabel.SetText(message.Value as string);
+                    }
+                    else if(message.Key == WatchMessage.TimeStarted)
+                    {
+                        this.timeStartedLabel.SetText(message.Value as string);
+                    }
+                    else if(message.Key == WatchMessage.ReconnectingErrors)
+                    {
+                        reconnectingProgressLabel.SetHidden(true);
+                        reconnectingErrors.SetHidden(false);
+                        this.reconnectingErrors.SetText(message.Value as string);
+                    }
+                    else if(message.Key == WatchMessage.BoardName)
+                    {
+                        boardNameLabel.SetText(message.Value as string);
+                    }
+                    else if(message.Key == WatchMessage.BoardConnectionState)
+                    {
+                        boardConnectionStateLabel.SetText(message.Value as string);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception Processing Message: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Exception Processing Message: {ex.Message}");
                 this.errorMessages.SetText($"Exception: {ex.Message}");
             }
         }
