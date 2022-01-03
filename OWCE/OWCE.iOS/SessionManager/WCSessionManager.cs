@@ -180,7 +180,11 @@ namespace WatchConnectivity
 					{
 						dictionary[key] = (message[nativeKey] as NSNumber)?.FloatValue ?? 0f;
 					}
-					else if (key == WatchMessage.Distance || key == WatchMessage.SpeedUnitsLabel)
+					else if (key == WatchMessage.Distance || key == WatchMessage.SpeedUnitsLabel ||
+						key == WatchMessage.AppState || key == WatchMessage.ReconnectingErrors ||
+						key == WatchMessage.TimeStarted || key == WatchMessage.BoardName ||
+						key == WatchMessage.BoardConnectionState ||
+						key == WatchMessage.ForceReconnect || key == WatchMessage.ForceDisconnect)
 					{
 						dictionary[key] = (message[nativeKey] as NSString)?.ToString() ?? String.Empty;
 					}
