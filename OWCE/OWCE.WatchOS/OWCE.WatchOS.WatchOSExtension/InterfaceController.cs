@@ -202,13 +202,13 @@ namespace OWCE.WatchOS.WatchOSExtension
             reconnectingProgressLabel.SetHidden(false);
             reconnectingErrors.SetHidden(true);
             WCSessionManager.SharedManager.SendMessage(new Dictionary<WatchMessage, object>() {
-                { WatchMessage.ForceReconnect, null } });
+                { WatchMessage.ForceReconnect, "Unused" } });
         }
 
         partial void forceDisconnectButtonPressed()
         {
             WCSessionManager.SharedManager.SendMessage(new Dictionary<WatchMessage, object>() {
-                { WatchMessage.ForceDisconnect, null } });
+                { WatchMessage.ForceDisconnect, "Unused"} });
         }
 
     }
