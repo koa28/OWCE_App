@@ -93,9 +93,8 @@ namespace OWCE
             WatchSyncEventHandler.ForceDisconnect += HandleForceDisconnect;
 
             MetricDisplay = Preferences.Get("metric_display", System.Globalization.RegionInfo.CurrentRegion.IsMetric);
-            _boardConnectionCode = UserSecretsManager.Settings["BoardConnectionCode"];
-            _boardId = UserSecretsManager.Settings["BoardId"];
-            Debug.WriteLine("BoardConnectionCode: " + BoardConnectionCode);
+
+            LoadFromSettings();
             
             if (Directory.Exists(LogsDirectory) == false)
             {
@@ -254,6 +253,17 @@ namespace OWCE
                 Console.WriteLine("Stack Trace: " + e.StackTrace);
                 App.Current.ReconnectingErrors = e.Message;
             }
+        }
+
+        public void LoadFromSettings()
+        {
+            //_boardConnectionCode = UserSecretsManager.Settings["BoardConnectionCode"];
+            //_boardId = UserSecretsManager.Settings["BoardId"];
+
+            _boardConnectionCode = Preferences.Get("boardConnectionCode", null);
+            _boardId = Preferences.Get("boardBluetoothId", null);
+
+            Debug.WriteLine("Loaded BoardConnectionCode: " + BoardConnectionCode);
         }
 
     }
