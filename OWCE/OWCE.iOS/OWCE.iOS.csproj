@@ -240,6 +240,7 @@
     <Folder Include="Assets.xcassets\settings_disconnect.imageset\" />
     <Folder Include="Assets.xcassets\settings_info.imageset\" />
     <Folder Include="SessionManager\" />
+    <Folder Include="Settings.bundle\" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="iTunesArtwork" />
@@ -252,5 +253,6 @@
     <BundleResource Include="Resources\splash_background.png" />
     <BundleResource Include="Resources\splash_background%402x.png" />
     <BundleResource Include="Resources\splash_background%403x.png" />
+    <BundleResource Include="Settings.bundle\root.plist" />
   </ItemGroup>
 </Project>
