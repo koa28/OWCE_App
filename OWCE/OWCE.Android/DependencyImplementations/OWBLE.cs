@@ -190,12 +190,13 @@ namespace OWCE.Droid.DependencyImplementations
             
             foreach (var characteristic in service.Characteristics)
             {
-                _characteristics.Add(characteristic.Uuid.ToString().ToLower(), characteristic);
+                _characteristics[characteristic.Uuid.ToString().ToLower()] = characteristic;
             }
 
-            if (_connectTaskCompletionSource.Task.IsCanceled == false)
+            if (_connectTaskCompletionSource?.Task.IsCanceled == false && _connectTaskCompletionSource?.Task.IsCompleted == false)
             {
                 _connectTaskCompletionSource.SetResult(true);
+
                 // TODO: Fix this.
                 //BoardConnected?.Invoke(new OWBoard(_board));
             }
@@ -586,10 +587,30 @@ namespace OWCE.Droid.DependencyImplementations
 
         public Task Disconnect()
         {
-            if (_connectTaskCompletionSource != null && _connectTaskCompletionSource.Task.IsCanceled == false)
+            if (_connectTaskCompletionSource != null && _connectTaskCompletionSource.Task.IsCanceled == false && _connectTaskCompletionSource.Task.IsCompleted == false && _connectTaskCompletionSource.Task.IsFaulted == false)
             {
-                // TODO: this causes app to crash. While not ideal, this works for the current flow.
-                _connectTaskCompletionSource.SetCanceled();
+                try
+                {
+                    _connectTaskCompletionSource.SetCanceled();
+                    _connectTaskCompletionSource = null;
+
+                    _bluetoothGatt.Disconnect();
+                    _bluetoothGatt = null;
+                    _gattCallback = null;
+
+
+                    _readQueue.Clear();
+                    _writeQueue.Clear();
+                    _subscribeQueue.Clear();
+                    _unsubscribeQueue.Clear();
+                    _gattOperationQueue.Clear();
+
+                }
+                catch (Exception err)
+                {
+
+                    Debugger.Break();
+                }
             }
 
             // TODO: Handle is connecting.
@@ -861,10 +882,21 @@ namespace OWCE.Droid.DependencyImplementations
 
         public async Task<bool> ReadyToScan()
         {
-            var permissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-            if (permissionStatus == PermissionStatus.Granted || permissionStatus == PermissionStatus.Restricted)
+            if ((int)Android.OS.Build.VERSION.SdkInt >= 31)
             {
-                return true;
+                var permissionStatus = await Permissions.CheckStatusAsync<BluetoothPermission>();
+                if (permissionStatus == PermissionStatus.Granted)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                var permissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                if (permissionStatus == PermissionStatus.Granted || permissionStatus == PermissionStatus.Restricted)
+                {
+                    return true;
+                }
             }
 
             return false;

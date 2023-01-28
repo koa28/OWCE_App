@@ -521,9 +521,16 @@ namespace OWCE
             set { if (_rssi != value) { _rssi = value; OnPropertyChanged(); } }
         }
 
+
+        bool _isRecordingRide = false;
+        public bool IsRecordingRide
+        {
+            get { return _isRecordingRide; }
+            set { if (_isRecordingRide != value) { _isRecordingRide = value; OnPropertyChanged(); } }
+        }
+
         IOWBLE _owble;
 
-        bool _isLogging = false;
         OWBoardEventList _events = new OWBoardEventList();
         List<OWBoardEvent> _initialEvents;
         Ride _currentRide = null;
@@ -552,31 +559,23 @@ namespace OWCE
             // Subscribe to property changes to keep watch app in sync
             // (eg speed, battery percent changes)
             this.PropertyChanged += WatchSyncEventHandler.HandlePropertyChanged;
-
-            MessagingCenter.Subscribe<object>(this, "start_recording", (source) =>
-            {
-                if (_isLogging)
-                    return;
-
-                StartLogging();
-            });
-            MessagingCenter.Subscribe<object>(this, "stop_recording", (source) =>
-            {
-                if (_isLogging)
-                {
-                    StopLogging();
-                }
-            });
         }
 
         public virtual void Init()
         {
+            var autoRideRecording = Preferences.Get("auto_ride_recording", false);
+            if (autoRideRecording)
+            {
+                StartLogging();
+            }
+            /*
 #if DEBUG
             if (DeviceInfo.DeviceType == DeviceType.Physical)
             {
                 StartLogging();
             }
 #endif
+            */
         }
 
         void LogData(string characteristicGuid, byte[] data)
@@ -611,7 +610,7 @@ namespace OWCE
         {
             //Debug.WriteLine($"{characteristicGuid} {BitConverter.ToString(data)}");
 
-            if (_isLogging)
+            if (IsRecordingRide)
             {
                 LogData(characteristicGuid, data);
             }
@@ -1140,7 +1139,7 @@ namespace OWCE
 
             if (initialData)
             {
-                if (_isLogging)
+                if (IsRecordingRide)
                 {
                     LogData(uuid, data);
                 }
@@ -1383,23 +1382,21 @@ namespace OWCE
             //await CrossBluetoothLE.Current.Adapter.DisconnectDeviceAsync(_device);
         }
         */
-        //private long _currentRunStart = 0;
-        //public long CurrentRunStart { get{ return _currentRunStart; } }
 
 
         public void StartLogging()
         {
-            var filename = DateTime.Now.ToString("dd MMMM yyyy hh:mm:ss tt") + ".bin";
+            if (IsRecordingRide)
+            {
+                return;
+            }
 
-            // _currentRunStart = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            //_logDirectory = Path.Combine(FileSystem.CacheDirectory, _currentRunStart.ToString());
-            var currentRunStart = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            _currentRide = new Ride(filename);
+            _currentRide = Ride.CreateNewRide();
 
             //_currentLogFile = Path.Combine(App.Current.LogsDirectory, filename);
 
 
-            _isLogging = true;
+            IsRecordingRide = true;
             _events = new OWBoardEventList();
             if (_initialEvents != null)
             {
@@ -1420,12 +1417,14 @@ namespace OWCE
             */
         }
 
-        public string StopLogging()
+        public void StopLogging()
         {
-            _isLogging = false;
-            _currentRide.EndTime = DateTime.Now;
-            // TODO: Replace hud.
-            //Hud.Show("Saving");
+            if (IsRecordingRide == false)
+            {
+                return;
+            }
+
+            IsRecordingRide = false;
 
             /*
             await CrossGeolocator.Current.StopListeningAsync(); 
@@ -1435,11 +1434,12 @@ namespace OWCE
 
             SaveEvents();
 
-            //Hud.Dismiss();
-
-
-
-            return String.Empty;
+            if (_currentRide != null)
+            {
+                _currentRide.EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                _currentRide.EndTime = DateTime.Now;
+                _currentRide.Save();
+            }
         }
 
 
@@ -1522,13 +1522,19 @@ namespace OWCE
             {
                 var oldEvents = _events;
                 _events = new OWBoardEventList();
-                var logPath = _currentRide.GetLogFilePath();
-                using (FileStream fs = new FileStream(logPath, FileMode.Append, FileAccess.Write))
+                using (var fileStream = new FileStream(Path.Combine(App.Current.LogsDirectory, _currentRide.DataFileName), FileMode.Append, FileAccess.Write))
                 {
                     foreach (var owBoardEvent in oldEvents.BoardEvents)
                     {
-                        owBoardEvent.WriteDelimitedTo(fs);
+                        owBoardEvent.WriteDelimitedTo(fileStream);
                     }
+                }
+
+                if (_currentRide != null)
+                {
+                    _currentRide.EndTime = DateTime.Now;
+                    _currentRide.EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    _currentRide.Save();
                 }
                 //long currentRunEnd = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 // var outputFile = Path.Combine(_logDirectory, $"{currentRunEnd}.dat");

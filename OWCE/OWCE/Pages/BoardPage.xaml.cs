@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using RestSharp;
 using System.Net;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ using Rg.Plugins.Popup.Services;
 using System.Linq;
 using OWCE.Views;
 using OWCE.DependencyInterfaces;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace OWCE.Pages
 {
@@ -31,6 +31,13 @@ namespace OWCE.Pages
         }*/
 
         private bool _initialSubscirbe = false;
+        Grid _sideMenuItem = null;
+
+        IAsyncCommand _startRecordRideCommand = null;
+        public IAsyncCommand StartRecordRideCommand => _startRecordRideCommand ??= new AsyncCommand(StartRecordingAsync, allowsMultipleExecutions: false);
+
+        IAsyncCommand _stopRecordRideCommand = null;
+        public IAsyncCommand StopRecordRideCommand => _stopRecordRideCommand ??= new AsyncCommand(StopRecordingAsync, allowsMultipleExecutions: false);
 
         public BoardPage(OWBoard board) : this(board, true) {}
 
@@ -38,13 +45,12 @@ namespace OWCE.Pages
         {
             Board = board;
 
-            //board.StartLogging();
             InitializeComponent();
             BindingContext = board;
 
             AppVersionLabel.Text = $"{AppInfo.VersionString} (build {AppInfo.BuildString})";
 
-            ImperialSwitch.IsToggled = !App.Current.MetricDisplay;
+            // TODO: Fix ImperialSwitch.IsToggled = !App.Current.MetricDisplay;
 
             if (initBLE)
             {
@@ -62,17 +68,18 @@ namespace OWCE.Pages
             titleLabel.HorizontalOptions = LayoutOptions.End;
             titleLabel.Padding = new Thickness(0, 0, 16, 0);
 
-      
-            var settingsToolbarItem = new CustomToolbarItem()
+
+            var sideMenuItem = new CustomToolbarItem()
             {
                 Position = CustomToolbarItemPosition.Left,
                 IconImageSource = "burger_menu",
-                Command = new Command(() =>
+                Command = new AsyncCommand(async () =>
                 {
-                    PopupNavigation.Instance.PushAsync(SettingsPopupPage);
-                }),
+                    await PopupNavigation.Instance.PushAsync(Popup.SideMenuPopup.Instance);
+                }, allowsMultipleExecutions: false),
             };
-            CustomToolbarItems.Add(settingsToolbarItem);
+            CustomToolbarItems.Add(sideMenuItem);
+
         }
 
         private void OWBLE_BoardDisconnected()
@@ -111,8 +118,6 @@ namespace OWCE.Pages
             }
         }
 
-
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -120,6 +125,16 @@ namespace OWCE.Pages
             {
                 Board = App.Current.CurrentBoard;
             }
+
+            Popup.SideMenuPopup.Instance.Title = "OWCE";
+
+            if (_sideMenuItem == null)
+            {
+                var dataTemplate = (DataTemplate)Resources["SideMenu"];
+                _sideMenuItem = dataTemplate.CreateContent() as Grid;
+                _sideMenuItem.BindingContext = this;
+            }
+            Popup.SideMenuPopup.Instance.PageSpecificSideMenu = _sideMenuItem;
         }
 
         protected override void OnDisappearing()
@@ -152,9 +167,13 @@ namespace OWCE.Pages
         async void Disconnect_Tapped(System.Object sender, System.EventArgs e)
         {
             var result = await DisplayActionSheet("Are you sure you want to disconnect?", "Cancel", "Disconnect");
+
             if (result == "Disconnect")
             {
-                await PopupNavigation.Instance.PopAllAsync();
+                if (PopupNavigation.Instance.PopupStack.Any())
+                {
+                    await PopupNavigation.Instance.PopAllAsync();
+                }
                 await DisconnectAndPop();
             }
         }
@@ -162,12 +181,16 @@ namespace OWCE.Pages
         public async Task DisconnectAndPop()
         {
             await App.Current.OWBLE.Disconnect();
+
+            Board.StopLogging();
+
             await Navigation.PopModalAsync();
-            //IWatch watchService = DependencyService.Get<IWatch>();
-            //watchService.StopListeningForWatchMessages();
+
+            // IWatch watchService = DependencyService.Get<IWatch>();
+
+            // watchService.StopListeningForWatchMessages();
         }
 
-        private bool _isLogging = false;
 
         void ImperialSwitch_IsToggledChanged(object sender, bool isToggled)
         {
@@ -177,78 +200,17 @@ namespace OWCE.Pages
             MessagingCenter.Send<App>(App.Current, App.UnitDisplayUpdatedKey);
         }
 
-        /*
-        private async void LogData_Clicked(object sender, System.EventArgs e)
+        async Task StartRecordingAsync()
         {
-            if (_isLogging)
-            {
-                LogDataButton.Text = "Start Logging Data";
-                _isLogging = false;
-                string zip = await Board.StopLogging();
-                Hud.Dismiss();
-                Hud.Show("Uploading");
-                var client = new RestClient("https://owce.app");
-
-                var request = new RestRequest("/upload_log.php", Method.POST);
-                request.AddParameter("serial", Board.SerialNumber);
-                request.AddParameter("ride_start", DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-
-                try
-                {
-                    var response = await client.ExecuteTaskAsync(request);
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-
-                        HttpWebRequest httpRequest = WebRequest.Create(response.Content) as HttpWebRequest;
-                        httpRequest.Method = "PUT";
-                        using (Stream dataStream = httpRequest.GetRequestStream())
-                        {
-                            var buffer = new byte[8000];
-                            using (FileStream fileStream = new FileStream(zip, FileMode.Open, FileAccess.Read))
-                            {
-                                int bytesRead = 0;
-                                while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
-                                {
-                                    dataStream.Write(buffer, 0, bytesRead);
-                                }
-                            }
-                        }
-                        HttpWebResponse uploadResponse = httpRequest.GetResponse() as HttpWebResponse;
-
-
-                        Hud.Dismiss();
-                        if (uploadResponse.StatusCode == HttpStatusCode.OK)
-                        {
-                            await DisplayAlert("Success", "Log file sucessfully uploaded.", "Ok");
-                        }
-                        else
-                        {
-                            await DisplayAlert("Error", "Could not upload log at this time.", "Ok");
-                        }
-                    }
-                    else
-                    {
-                        Hud.Dismiss();
-                        await DisplayAlert("Error", "Could not upload log at this time.", "Ok");
-                    }
-                }
-                catch (Exception err)
-                {
-                    Hud.Dismiss();
-                    await DisplayAlert("Error", err.Message, "Ok");
-                    // Log
-                }
-            }
-            else
-            {
-                LogDataButton.Text = "Stop Logging Data";
-                _isLogging = true;
-                await Board.StartLogging();
-
-            }
-
+            await Popup.SideMenuPopup.Instance.CloseCommand_Clicked();
+            Board.StartLogging();
         }
-        */
+
+        async Task StopRecordingAsync()
+        {
+            await Popup.SideMenuPopup.Instance.CloseCommand_Clicked();
+            Board.StopLogging();
+        }
 
         void SetSimpleStop_On(System.Object sender, System.EventArgs e)
         {
@@ -259,5 +221,6 @@ namespace OWCE.Pages
         {
             this.Board.DisableSimpleStop();
         }
+
     }
 }

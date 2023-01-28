@@ -22,7 +22,6 @@ using OWCE.PropertyChangeHandlers;
 [assembly: ExportFont("SairaExtraCondensed-Medium.ttf")]
 
 
-//SairaExtraCondensed-SemiBold
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace OWCE
 {
@@ -79,7 +78,7 @@ namespace OWCE
 
         public string BoardId { get { return _boardId; } }
 
-        public string LogsDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "beta_ride_logs");
+        public string LogsDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "past_rides");
 
         public App()
         {
@@ -101,6 +100,8 @@ namespace OWCE
                 Directory.CreateDirectory(LogsDirectory);
             }
 
+            Database.Init();
+
             InitializeComponent();
 
             AppState = "Initialized";
@@ -108,6 +109,30 @@ namespace OWCE
             // If simulator or emulator use MockOWBLE.
             if (DeviceInfo.DeviceType == DeviceType.Virtual)
             {
+                /*
+                var filenameRegex = new System.Text.RegularExpressions.Regex(@"^OWCE\.Resources\.SampleRideData\.(.*)\.bin$");
+                var assembly = System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
+                foreach (var resourceName in assembly.GetManifestResourceNames())
+                {
+                    var match = filenameRegex.Match(resourceName);
+                    if (match.Success) //resourceName.StartsWith("OWCE.Resources.SampleRideData.")
+                    {
+                        var targetFilename = Path.Combine(LogsDirectory, match.Groups[1].Value + ".bin");
+                        if (File.Exists(targetFilename) == false)
+                        {
+                            // TODO: Check filename? Check exists? Check checksum?
+                            using (var fileStream = assembly.GetManifestResourceStream(resourceName))
+                            {
+                                using (var streamWriter = File.Create(targetFilename))
+                                {
+                                    fileStream.CopyTo(streamWriter);
+                                }
+                            }
+                        }
+                    }
+                }
+                */
+
                 OWBLE = new MockOWBLE();
             }
             else
@@ -118,7 +143,8 @@ namespace OWCE
             OWBLE = DependencyService.Get<IOWBLE>();
 #endif
             //MainPage = new MainFlyoutPage();
-            MainPage = new NavigationPage(new BoardListPage());
+            MainPage = new CustomNavigationPage(new BoardListPage());
+            //MainPage = new CustomNavigationPage(new SubmitRidePage(new Ride()));
 
 
 
